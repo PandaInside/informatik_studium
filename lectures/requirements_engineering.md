@@ -1,4 +1,4 @@
-# Requirements Engineering
+# Requirements Engineering (Praktikum Gruppe 7)
 ## Foliensatz reqeng-le-1
 ### Warum Requirements Engineering? (siehe Seite 6 ff)
 - Urteilskraft / fachliche Bewertung ist wichtiger als nur Texte zu generieren
@@ -87,3 +87,107 @@
 - Datenflussdiagramm
 - Use-Case-Diagramm
 - Klassendiagramm
+
+## Foliensatz reqeng-le-4
+### Anforderungen dokumentieren
+
+[!NOTE] Anforderungsspezifikation *(auch: Anforderungsdokument)*
+> Ist eine systematisch dargestellte Sammlung von Anforderungen (typischerweise für ein System oder eine Komponente), die vorgegebenen Kriterien genügt.
+
+### Gründe für Dokumentation
+- zentrale Bedeutung von Anforderungen 
+  - Eingrenzung Interpretationsspielräume / Mismatches
+- rechtliche Relevanz 
+  - Nachweisbarkeit für weniger Diskussionspotential 
+  - Vorschriften festhalten
+- Komplexität 
+  - Nachvollziehbarkeit (Einarbeitung, Nacharbeiten -> Historie)
+- Zugreifbarkeit 
+  - fehlende Auskünfte aufgrund von Urlaub oder Fluktuation
+
+### Arten der Dokumentation
+#### Perspektiven von Anforderungen (Bezug auf Praltikum 1) > Seite 7
+- Strukturperspektive
+  - grobe Struktur
+  - modellbasiert empfohlen
+- Funktionsperspektive
+  - Eingabe- und Ausgabedaten beschreiben
+- Verhaltensperspektive
+  - Zustandsautomat
+  - Zustandswechsel hat Trigger, der diesen auslöst
+  - unter welchen Bedingungen geht es weiter
+
+#### Natürlichsprachliche Dokumentation
+
+|Vorteile|Nachteile / potentielle Gefahren|
+|---|---|
+|Jedem verständlich.<br>Kein Erlernen einer Notation nötig.<br>Einsetzbar für alle Arten von Anforderungen.|Natürliche Sprache ist oft mehrdeutig oder missverständlich.<br>Unbeabsichtigtes Vermischen der Perspektiven von Anforderungen. ->  Einwegkanal: Man muss mit den erhaltenen Informationen arbeiten können.<br>Isolation der Anforderungen für nur eine Perspektive schwierig. -> Mischform|
+
+#### Modelbasierte Dokumentation
+
+|Vorteile|Nachteile / potentielle Gefahren|
+|---|---|
+|Anforderungen können isoliert in jeder der drei Perspektiven dokumentiert werden. -> verschiedene Werkzeuge<br>Kompakt und für geübten Leser Einarbeitungszeit kürzer<br>Vermeiden von Missverständnisen|Kein universaler Einsatz -> Hängt von Diagrammform ab.<br>Kenntnis der Notation nötig|
+
+#### Mischform
+- Anforderungsdokumente enthalten nicht nur Anforderungen
+  - WICHTIG: Dokumentation von Entscheidungen für Nachweisbarkeit
+  - Umfang der Erläuterungen eigenes Ermessen, aber sollte nachvolziehbar sein
+  - Relevante Informationen, wie Randbedingungen, sollten notiert sein -> besser haben als brauchen
+- Die Wahl der geeigneten Dokumentationsform ist von mehreren Faktoren abhängig
+  - Welche Dokumentationsform ist für die Perspektive geeignet? Einheitlichkeit verwenden -> unterschiedliche Beschreibung von Perspektiven kritisch zu betrachten
+  - Leserkreis sollte berücksichtigt werden -> Einheitlichkeit, strukturelle Nachvollziehbarkeit, bestimmtes Wissen vorwegnehmen, um Einarbeitungszeit zu vermeiden
+  - zu dokumentierendes Wissen
+- Typisch ist eine Kombination aus natürlichsprachlichen Anforderungen und konzeptuellen Modellen.
+  - Schwächen der einen Dokumentationform werden durch die Stärken der anderen weitgehend ausgeglichen -> geeignetste aus jeder Dokumentationsform herausnehmen
+  - Vorteile beider Dokumentationsformen werden genutzt
+  - Beispiel: Diagramme mit mehr Details in natürlicher Sprache beschreiben/kommentieren -> doppelter Aufwand, aber gute Chance auf Eindeutigkeit
+
+### Struktur eines Anforderungsdokumentes
+#### Standardgliederungen
+- Vorteile:
+  - Hauptgrund: Wiedererkennungswert -> schnelle Erfassung des ausgewählten Inhaltes
+  - einfache Wiederverwendung von Inhalten (Achtung: nötige kundenspezifische Anpassungen berücksichtigen)
+  - Erleichtert Einarbeitung neuer Mitarbeiter
+  - Selektives Lesen/Überprüfen von Anforderungsdokumenten
+- Sie können und sollten an die projektspezifischen Randbedingungen angepasst werden
+
+##### Rational Unified Process (RUP)
+- für objektorientierte Softwaresysteme
+- Auftraggeber erstellt Business Model
+- Auftragnehmer nutzt Software Requirements Specification (SRS) für Anforderungsdokumentation
+
+##### Volere
+- Urpsrung: Karteikarten -> Jede Kateikarte hatte bestimmte Merkmale
+- zugeschnitten auf objektorientierte Softwareentwicklung
+- guter Blick auf das Gesamtsystem, nicht nur Anforderungen
+- Viele vorgefertigte Schubladen, darunter einige, die sich nicht in anderen Standards wieder finden (z. B. „Kulturelle und politische Anforderungen“)
+
+##### IEEE 830-1998
+- Produktumfeld fehlt im Volere
+
+##### V-Modell des Bundesministeriums
+- Lastenheft = Anwendersicht, Gesamtheit der Forderungen -> Verhandlungsspielraum
+- Pflichtenheft = Realisierungsvorgaben
+
+#### Nicht-funktionale Anforderungen - Seite 18 ff
+
+##### Qualitätsanforderungen
+- Funktionalität -> Passt alles zusammen? Was kann das Produkt?
+- Zuverlässigkeit -> 99,9 % Verfügbarkeit gewährleistet? Was ist, wenn ein Teil meines Systems ausfällt?
+- Benutzbarkeit -> Schnittstelle Mensch/Maschine
+- Effizienz -> Performance
+- Änderbarkeit
+- Übertragbarkeit
+
+Umgang mit nicht-funktionalen Anforderungen
+- geben Zusatzinformationen auf funktionale Anforderungen
+- natürliche Sprache
+- gleichzeitig mit funktionalen Anforderungen ermitteln & dokumentieren
+- gleich wichtig wie funktionale Anforderungen
+- Absprache mit Fachleuten/Stakeholdern
+- für Architektur und AWS notwendig
+- werden nicht alle unbedingt umgesetzt, schränken die Umsetzung allerdings ein ->
+- müssen prüfbar/testbar sein
+
+seite 22
