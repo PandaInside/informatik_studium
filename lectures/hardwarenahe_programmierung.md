@@ -2,6 +2,11 @@
 - Vorlesung: 13:30 Uhr GAB 344 (Hörsaal) -> https://cpp.homefgr.de/cpp-doc/2026/02_semesterplan.html
 - Praktikum: 15:20 Uhr PKB 165a (Seminarraum)
 - GitHub "WSL Token": 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
+- Prüfungsvorleistung: 
+  1. Pinnball Spiel (https://cpp.homefgr.de/cpp-doc/2026/pv1.html)
+    --> Verteidung am 13.04 oder 20.04 
+    --> Code bis MOntag 8:00 Uhr einreichen (freiwillig, kann aber auch direkt live vorgestellt werden)
+  2. noch offen -> wenn erste bestanden, muss diese nicht unbedingt bestanden werden 
 
 ---
 
@@ -67,6 +72,10 @@
         - Microsoft Visual Studio  
     - erlaubt direkten Zugriff auf CPU, RAM, Betriebssystem
     - Von `C` über `C with classes` zu `C++` -> Ende 1998 erster `C++` Standard erschienen
+    - ==Call by Value Sprache==
+    - **Grundprinzip**: Wiederkehrende Probleme durch Algorithmen in den Standard-Bibliotheken lösen
+        --> Algorithmen sind losgelöst von den Datentypen
+        --> `#include <algorithm>` wird benötigt
     - Speicher holen mit `malloc(100)`
     - `std::cout` => console out
     - Modulsystem für Imports -> funktioniert noch nicht universell
@@ -74,7 +83,7 @@
     - Begrifflichkeiten:
         - `std` = Namenspace
         - `::` = Namespace-Trenner
-        - Alternative: `using namespace std`;
+        - *Alternative*: `using namespace std`;
         - `endl` = end line
         - `<<` = Ausgabe
         - `#include` = Inkludieren von Header-Dateien
@@ -95,20 +104,47 @@
             --> immutable
         - `[[nodiscard]]` = Ergebnis nicht wegschmeißen -> Aufruf der Methode ist sinnlos (Compiler weist darauf hin)
         - `throw std::domain_error{ std::format(...) }` = wir halten uns nicht an Eingabebereiche
-        - Zeichenketten sind Array mit terminierender 0 --> `format` verwenden
+        - Zeichenketten sind Arrays mit terminierender 0 --> `format` verwenden
         - `void mischen(Spielkarte kartenstapel[150])` 
             --> 150 = magic number
             --> Arrays kennen keine Länge (wie size(), length(), sizeof(), ...) --> keine Schleifen möglich (for, foreach, ...)
             --> Verwendung von Build-in-Arrays nur, wenn wirklich nötig --> möglichst vermeiden
         - ==Templates sind mächtig==
         - `std::vector<Spielkarte> kartenstapel` 
-            --> kommt der ArrayList in Java am nähesten
+            --> Equivalent der ArrayList in Java
             --> Nutzung für Sammlung an Datentypen
+            --> enthält keine Karten bei Aufruf von `mischen`--> es läuft kein Constructor Code, kein Default Constructur benötigt
+            --> Vektor kennt keine Länge --> verbraucht zunächst keinen Speicher
+            --> `kartenstapel.emplaceback(wert: 12)` --> man gibt nur Contructorwerte mit --> ruft automatisch Contructor auf und fügt Wert hinten am Array hinzu (forward deklaration)
+                --> *Alternative*: `kartenstapel.pushback(Spielkarte{ 12 })`
+            --> `kartenstapel.at(n:0) = Spielkarte{ wert: 12 }` prüft --> Ist der Wert nicht vorhanden, wird eine Exception geworfen
         - `std::array<Spielkarte, 150> kartenstapel` > `constexpr int anzahl_karten = 150;` > `mischen(std::array<Spielkarte, anzahl_karten> kartenstapel)`
             --> Festlegung der Länge des Arrays in der Typendeklaration des Templates, das ist fix
             --> verhält sich wie Build-in-Array mit der Info der Anzahl der enthaltenen Elemente
             --> `constexpr` = zur Compilierzeit konstant
-
+            --> Elemente des übergebenen Objektes werden per Default Contructor konstruiert
+        - Wenn das Array der Methode `mischen` übergeben wird, wird das Original-Array kopiert und die Kopie bearbeitet --> **Call by Value / Call by Copy** (Standard)
+            - Wenn **Call by Reference** benötigt wird, muss dies als dieses ausgewiesen werden mit `&` (`std::addressof()`) am Übergabeparameter 
+                --> `mischen(std::array<Spielkarte, anzahl_karten> &kartenstapel)`
+                --> Wenn dies in der Methodesignatur angegeben wurde, wird dies von der IDE überall als Referenz ausgewiesen 
+                --> In der Methode `mischen` wird die Referenz des riginalobjektes übergeben
+            - *Alternative*: mit `*` (Pointer -> Adresse des Objektes) statt `&`
+                --> `mischen(std::array<Spielkarte, anzahl_karten> *kartenstapel)`
+                --> `(*kartenstapel)[0]` = Derefferenzieren eines Elementes 
+                --> mehr Schreibarbeit
+            - Lokalisierung des `&` ist egal, kann links oder rechts stehen, hauptsache das kaufmännische UND verweist auf Referenz
+        - `std:shuffle(first: kartenstapel.begin(), last: Kartenstapel.end(), &g:gen)` 
+            --> Mischen von Datenmengen
+            --> Begin und Ende der Datenmenge sowie Zufallsgenerator (`&g:gen`) benötigt
+            --> `#include <random>` wird benötigt
+            --> *Alternative*: `std::ranges::shuffle(&r: kartenstapel, &g:gen)` --> range sucht sich selbst Anfang und Ende des übergebenen Objektes
+        - `std::count_if(first: kartenstapel.begin(), last: kartenstapel.end(), pred: [](const auto &karte: const Spielkarte &) { return karte.wert() == -2; }))`
+            --> `pred` = Prädikat = boolscher Wert
+                --> Lamda-Ausdrücke beginnen immer mit `[]` --> Hierin stehen Variablen, die wir ins Lamda übergeben wolen, weil der Body darauf zugreift (capture clause)
+                    --> `pred: [&erwarteter_wert](const auto &karte: const Spielkarte &) { return k... REQUIRE(anzahl == anzahl_spielkarten_pro_kartenwert.at(k: erwarteter_wert)); })` (Skyjo v4 Zeile 139)
+                --> `(const auto &karte: const Spielkarte &)` --> `const` = nur konstande Memberfunktionen können aufgerufen werden --> nur Leserechte
+                --> `{ return karte.wert() == -2; }` --> gibt zurück, ob der Wert -2 ist
+        - auf leere Referenzen prüfen: `nullptr()`
 ---
 
 ``` C++
