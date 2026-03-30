@@ -180,7 +180,7 @@
 - Änderbarkeit
 - Übertragbarkeit
 
-Umgang mit nicht-funktionalen Anforderungen
+##### Umgang mit nicht-funktionalen Anforderungen
 - geben Zusatzinformationen auf funktionale Anforderungen
 - natürliche Sprache
 - gleichzeitig mit funktionalen Anforderungen ermitteln & dokumentieren
@@ -190,4 +190,41 @@ Umgang mit nicht-funktionalen Anforderungen
 - werden nicht alle unbedingt umgesetzt, schränken die Umsetzung allerdings ein ->
 - müssen prüfbar/testbar sein
 
-seite 22
+##### Qualitätskriterien
+##### Glossar
+
+## Foliensatz reqeng-le-5
+### Kommunikationsmedium Sprache
+### Sprachliche Effekte und ihre Vertreter
+- Tilgung:
+  - Dinge werden gar nicht bewusst wahrgenommen
+  - werden demnach nicht beachtet (nicht spezifiziert, nicht dokumentiert)
+  - unvollständige Informtaionen
+  - Vertreter: ==unvollständig spezifizierte Bedingungen oder Prozesswörter==
+  - Signalwörter (z.B. wenn...dann, anzeigen) sollten hinterfragt werden, um Missverständnisse und spätere Nachfragen zu vermeiden
+  - Fehlen wissenswerte Informationen? W-Fragen stellen (z.B. Was, wem, wann wird angezeigt)
+- Generalisierung:
+  - Verallgemeinerungen führt zu Fehlern 
+  - Vertreter: ==Substantive ohne Bezugsindex== oder ==Universalquantoren==
+  - Signalwörter (z.B. Anwender, alle) führen zu lückenhaften Informationen, die näher erläutert werden sollten, inkl. Berücksichtigung von Ausnahmen
+- Verzerrung:
+  - realitätsverfälschende Aussagen
+  - Vertreter: ==Nominalisierung==
+  - Signalwörter (z.B. Speicherung, Archivierung) müssen an anderer Stelle im Anforderungsdokument ausreichend spezifiziert werden oder Anforderungen werden stattdessen mit Vollverben näher definiert
+
+#### Stilregeln 
+### Satzschablone
+
+[!NOTE] Satzschablone (Requirement Template)
+> Ist ein Bauplan für die syntaktische Struktur einer einzelnen Anforderung.
+
+#### Vorteile
+#### Satzschablone
+- Deutsche Satzschablone (Seite 22 && 25)
+- Satzschablone mit Bedingung (Seite 28)
+  - Eher voranstellen, weil man die Anforderung gleich anders liest, da man von Beginn an weiß, dass es an eine Bedingung geknüpft ist -> kann sonst schnell überlesen werden
+  - Egal in welcher Reihenfolge man dies handhabt, es sollte stets einheitlich bleiben.
+##### Typen der Funktionalität (Seite 26)
+
+## Foliensatz reqeng-le-5-add-2
+### Master-Schablonen
