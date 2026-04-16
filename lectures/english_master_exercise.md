@@ -1,5 +1,6 @@
 # English
-## Presentation Skills - Video
+## Presentation Skills
+### Video 1
 Pro:
 - jokes
 - free speaking & confidence
@@ -16,6 +17,12 @@ Con:
 - only text on the slides
 - less interaction with the audience
 
----
-
-Home Work Presentation Skills 3-6a
+### Video 2
+- laughing
+- standing not in front of presentation
+- showing carts
+- retorical question and answer
+ 
+ ### Homework (Documents: KW 14)
+- project management > 1 - 5
+- presentation skills part 4 > Tasks 1 + 2 + 6 (Pages 1,2,4,5,6)

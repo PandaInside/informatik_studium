@@ -228,3 +228,75 @@
 
 ## Foliensatz reqeng-le-5-add-2
 ### Master-Schablonen
+
+## Foliensatz reqeng-le-6
+### Modelle
+
+[!NOTE] Modell
+> Ist eine abstrakte Darstellung einer existierenden oder einer noch zu schaffenden Realität.
+
+- 3 Ausprägungen von Anforderungen:
+  - Ziele
+  - Use Cases
+  - Systemanforderungen
+- 3 Hauptaspekte von Modellen
+  - Abbild der Realität
+    - nie 1:1, meist liegt der Fokus auf einem speziellen Problem
+  - Verkürzung der Realität -> Folge von Punkt 1
+  - Pragmatische Eigenschaft 
+    - für die Lösung benötigte Eigenschaften, alle anderen sind nebensächlich
+    - Requirements Engineer muss herausfiltern, was wichtig ist
+
+#### Konzeptionelle Modellierungssprachen
+- Syntax = Werkzeuge (UML-Modell)
+- Semantik = Definition (UML Metamodell)
+
+#### Anforderungsmodelle
+
+[!NOTE] Anforderungsmodell
+> Ein konzeptionelles Modell, welches die Anforderungen eines Systems darstellt.
+
+- Vorteile
+  - Bildhaft dargestellte Informationen können im Gegensatz zu Fließtexten schneller erfasst und besser memoriert werden
+  - Unterstützt den Analytiker durch Vorgaben darüber, was in welher Art und Weise abstrahiert werden muss
+  - Definierter Fokus der Modellierungssprache ermöglicht effizierte Dokumentation
+
+### Zielmodelle Seite 11-14
+### Use Cases
+- 06_Anwendungsfalldiagramm_Folien.pdf
+- Unklarheiten gering halten
+
+### Strukturperspektive (wird nicht näher behandelt, sollte klar sein)
+#### UML Diagramme
+- Datentypen haben in Anforderungen nichts zu suchen, diese sind technischer Art
+- Wenn dann hält man dies als extra Anforderung natürlich-sprachlich fest
+
+#### Entity Relationship Diagramme
+- Betrachtung der Beziehungen zwischen gleichartigen Objekten oder gleichartigen Personen
+
+### Funktionsperspektive
+#### Aktivitätsdiagramme
+- Modellierung von Abläufen
+- Arten:
+  - Einfacher Ablauf
+  - Fork (Gabelung & Nebenläufigkeit) and Join (Vereinigung/Zusammenführung der Zweige)
+    - **keine Parallelität**
+    - Aktivitäten laufen unabhängig voneinander
+    - Gabelung ohne Fork lässt Diskussionsspielraum, ob man beide Wege geht, aber Petri-Netze (veraltet) bieten die Möglichkeit der Auflösung dessen mit der Übergabe und Prüfung von Tokens
+    - Bei Fork geht es nur weiter, wenn alle Zweige erfüllt wurden
+    - Partitionen / Swimlanes zur Unterscheidung von Verantwortlichkeitsbereichen
+
+    ![](assets/AktivitätsdiagrammPartitionen.png)
+
+- Mehrere Aktivtäten von einem Punkt ausgehend erlaubt
+- eine Prüfung hat mind. 2 Ergebnisse 
+- bool'sche Logik nicht vorgeschrieben
+- Notationselemente siehe Seite 40
+
+#### Datenflussdiagramme
+- Aktivitätsdiagramme sind sehr viel genauer, daher seltener verwendet
+- Datenflussdiagramme beschreiben den Transport von Daten zwischen Prozessen, Datenspeichern und Personen, Personengruppen oder Systemen.
+- kein Start- und Endpunkt
+
+### Verhaltensdiagramme
+#### UML-Zustandsdiagramme

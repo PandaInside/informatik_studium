@@ -5,7 +5,7 @@
 - Prüfungsvorleistung: 
   1. Pinnball Spiel (https://cpp.homefgr.de/cpp-doc/2026/pv1.html)
     --> Verteidung am 13.04 oder 20.04 
-    --> Code bis MOntag 8:00 Uhr einreichen (freiwillig, kann aber auch direkt live vorgestellt werden)
+    --> Code bis Montag 8:00 Uhr einreichen (freiwillig, kann aber auch direkt live vorgestellt werden)
   2. noch offen -> wenn erste bestanden, muss diese nicht unbedingt bestanden werden 
 
 ---
@@ -68,7 +68,7 @@
     - Multiparadigmensprache (nicht ausschließlich objektorientiert)
     - Compiler:
         - Gnu Compiler Collection (GCC) -> läuft auf allen Plattformen
-        - Glang
+        - Clang
         - Microsoft Visual Studio  
     - erlaubt direkten Zugriff auf CPU, RAM, Betriebssystem
     - Von `C` über `C with classes` zu `C++` -> Ende 1998 erster `C++` Standard erschienen
@@ -102,6 +102,7 @@
         - `const Spielkarte karte`
             --> konstante Variable (nur zur Laufzeit) 
             --> immutable
+            --> Es darf nur lesend darauf zugegriffen werden
         - `[[nodiscard]]` = Ergebnis nicht wegschmeißen -> Aufruf der Methode ist sinnlos (Compiler weist darauf hin)
         - `throw std::domain_error{ std::format(...) }` = wir halten uns nicht an Eingabebereiche
         - Zeichenketten sind Arrays mit terminierender 0 --> `format` verwenden
@@ -121,7 +122,7 @@
         - `std::array<Spielkarte, 150> kartenstapel` > `constexpr int anzahl_karten = 150;` > `mischen(std::array<Spielkarte, anzahl_karten> kartenstapel)`
             --> Festlegung der Länge des Arrays in der Typendeklaration des Templates, das ist fix
             --> verhält sich wie Build-in-Array mit der Info der Anzahl der enthaltenen Elemente
-            --> `constexpr` = zur Compilierzeit konstant
+            --> `constexpr` = Binary, zur Laufzeit konstant, wird vom Compilier ausgeführt
             --> Elemente des übergebenen Objektes werden per Default Contructor konstruiert
         - Wenn das Array der Methode `mischen` übergeben wird, wird das Original-Array kopiert und die Kopie bearbeitet --> **Call by Value / Call by Copy** (Standard)
             - Wenn **Call by Reference** benötigt wird, muss dies als dieses ausgewiesen werden mit `&` (`std::addressof()`) am Übergabeparameter 
@@ -130,7 +131,7 @@
                 --> In der Methode `mischen` wird die Referenz des riginalobjektes übergeben
             - *Alternative*: mit `*` (Pointer -> Adresse des Objektes) statt `&`
                 --> `mischen(std::array<Spielkarte, anzahl_karten> *kartenstapel)`
-                --> `(*kartenstapel)[0]` = Derefferenzieren eines Elementes 
+                --> `(*kartenstapel)[0]` = Dereferenzieren eines Elementes 
                 --> mehr Schreibarbeit
             - Lokalisierung des `&` ist egal, kann links oder rechts stehen, hauptsache das kaufmännische UND verweist auf Referenz
         - `std:shuffle(first: kartenstapel.begin(), last: Kartenstapel.end(), &g:gen)` 
@@ -145,6 +146,47 @@
                 --> `(const auto &karte: const Spielkarte &)` --> `const` = nur konstande Memberfunktionen können aufgerufen werden --> nur Leserechte
                 --> `{ return karte.wert() == -2; }` --> gibt zurück, ob der Wert -2 ist
         - auf leere Referenzen prüfen: `nullptr()`
+        - `static constexpr std::map<const int, const unsigned int> initialisiere_map_mit_anzahl_spielkarten_pro_kartenwert() noexcept {...}`
+            --> Variable: `const std::map<const int, const unsigned int> anzahl_spielkarten_pro_kartenwert = initialisiere_map_mit_anzahl_spielkarten_pro_kartenwert();`
+        - `std::map<const int, const unsigned int>anzahl_spielkarten_pro_kartenwert { [0]={-2, 5}, [1]={-1, 10}, [2]={0, 15} }` 
+            --> Einzelnes Map-Element ist vom Typ `std::pair<const int, const unsigned int>`
+        - `const unsigned int` = Integer hat kein Vorzeichen (wie jeder `int` bei Java)
+          - Warum? Zweier-Kompliment --> MARKUS
+        - `anzahl_spielkarten_pro_kartenwert.incert(...)` oder alternativ `anzahl_spielkarten_pro_kartenwert[i] = ...` 
+            --> packt ein `std:pair` in Map --> Typdeduktion
+        - `for( const auto &[ kartenwert: const int, anzahl_spielkarten: const unsigned int ] : anzahl_spielkarten_pro_kartenwert){...}` = Loop der Map (Skyjo 4 Zeile 60)
+            --> "**Structured Binding**" => Zerlegung des Pairs mit `[...]` in Einzelteile, um `pair.first` und `pair.second` zu vermeiden und eine bessere Semantik zu gewährleisten
+            --> Referenz mit `&`, weil Kopien sind aufwändiger als ein Verweis in die Map
+            --> `kartenstapel.end()` = liefert Iterator zurück, der das Ende der Map angibt
+        - `return kartenstapel;`
+            --> Warum wird eine Kopie zurückgegeben?
+            --> `std::vector<Spielkarte> &erstelle_kartenstapel`: `std::vector<Spielkarte>` (lokale Variable ) <== main: `std::vector<Spielkarte> &kartenstapel` == `erstelle_kartenstapel();`
+            --> Lokale Variable sind nach `return` prinzipiell weg -> bedarf lediglich einer CPU die Prozeduren aufrufen kann, kein Garbage Collector (bei Systemsprachen nicht vorhanden) nötig
+            --> Callstack Pointer wird beim Verlassen einer Prozedur auf Ursprungsframe zurückgedreht und Speicher (für Spielkarte) wird freigegeben
+            --> ==Keine Methoden bauen, die eine Referenz zurückgeben !!!==
+            --> Bei Java ist es immer eine Referenz
+        - **Verschiebe-Semantik** = macht Kopieren effizient
+        - `.h` oder`.hpp` = Header-Dateien
+            --> relevante Infos um Softwarekomponente verwenden zu können -> Schnittstellendefinition 
+            
+            ``` C++
+            class C {
+              public:
+                void f(); // Deklaration
+            }
+            ```
+
+        - `.cp` oder `.cpp` = Implementierungs-Dateien
+            --> eigentlich Implementierung der Schnittstelle mit voll qualifiertem Methodennamen
+
+            ``` C++
+            void C::f() {...} // Defintiion
+            ```
+
+        - **Präprozessor** läuft vor Compiler, er implementiert alle Abhängigkeiten
+        - `call` macht neuen Callstack auf
+        - Linker füllt Lücken auf
+
 ---
 
 ``` C++
@@ -195,8 +237,85 @@ void demo() {
 
 ---
 
-## Praktikum
-- Karte -> Klasse
-- Spielfeld 3x4
-- Nachzieh- & Ablagestapel
-- Spieler
+## Praktikum 1
+- struct mit Konfigurationsdaten (GameConfig):
+  - Spielfeld:
+    - Breite (pf_width)
+    - Höhe (pf_height) 
+    - Head (pf_head_content)
+    - Footer (pf_footer_content)
+  - Bricks:
+    - Buchstabe (bricks_char)
+    - Anzahl (bricks_count)
+    - Position (bricks_x & bricks_y) → Array of structs
+  - Paddle:
+    - Buchstabe (paddle_char)
+    - Länge (paddle_length)
+    - Startpunkt (paddle_x)
+  - Ball:
+    - Buchstabe (ball_char)
+    - Ausgangspunkt (ball_pos_x & ball_pos_y)
+    - Abprall Multiplikator (ball_bounce_multiplier_x & ball_bounce_multiplier_y)
+  - Handler:
+    - Bewegung nach rechts: KEY_RIGHT oder D (move_right)
+    - Bewegung nach links: KEY_LEFT oder A (move_left)
+    - Spiel starten: S (game_start)
+    - Spiel neustarten: R (game_reset)
+    - Spiel pausieren: P (game_pause)
+    - Spiel beenden: Q (game_quit)
+
+- strcut für die Ball Lokalisierung (BallState):
+  - ball_pos_x
+  - ball_pos_y
+  - ball_dir_x
+  - ball_dir_y
+  - ball_bounce_multiplier_x
+  - ball_bounce_multiplier_y
+
+- Funktion für Spiel-Initialisierung (Init):
+  - Übergabe Konfig-Struct
+  - Aufruf der Funktion RenderGame → Übergabe der Konfig
+  - Aufruf der Funktion AddHandler → Übergabe der Konfig
+
+- Funktion zum Rendern des Spielfeldes (RenderGame):
+  - Zeichnen des Spielfeldes auf dem Terminal mittels Konfig 
+
+- Funktion zu Initialisierung der Event Handler (AddHandler)
+  - Anhängen der Funktionen für Tastatur-Events mittels Konfig
+
+- Funktion zum Start des Spiels (GameStart)
+- Funktion zum Reset des Spiels (GameReset)
+- Funktion zum Pausieren des Spiels (GamePause)
+- Funktion zum Beenden des Spiels (GameQuit)
+
+- Funktion zur Paddle Bewegung (MovePaddle)
+  - Steuerung des Paddles nach Links oder rechts, je nach Übergabe-Parameter
+
+- Funktion zur Abfrage BallState (GetBallState)
+  - Rückgabe des Structs BallState
+
+- rekursive Funktion zur Ball Steuerung (ManageBallMovement)
+    - Übergabe BallState
+    - Aufruf ManageBrick-Funktion
+    - Aufruf ManageBorder-Funktion
+    - Aufruf ManagePaddle-Funktion, nur wenn wir uns in Zeile 1 befinden
+
+- Funktion zur Steuerung von Kollisionen mit Brick (ManageBrickContact)
+  - Jeder Brick hat einen Speicherplatz, der abgefragt werden kann → Ist ein Brick vorhanden wird aus dem Speicher 1 zurückgegeben, ist keiner vorhanden (zerstört) dann wird 0 zurückgegeben
+  - Aufruf der Funktion IsBrick()
+    - Wenn true: 
+      - Aufruf Funktion CalculateDirections() → Übergabe BallState
+      - Aufruf Funktion DestroyBrick() → Übergabe Pointer von Brick (Speicheradresse)
+    - Wenn false: 
+      - Aufruf Funktion CalculatePositions()
+- Funktion zur Prüfung ob Element ein Brick ist und ob dieser existiert (IsBrick)
+- Funktion zur Zerstörung von Bricks (DestroyBrick)
+
+- Funktion zur Steuerung von Kollision mit Spielfeldrand (ManageBorderContact)
+    - Aufruf Funktion CalculateDirections()
+
+- Funktion zur Steuerung des Kontaktes mit Paddle (ManagePaddleContact)
+    - Aufruf Funktion CalculateDirections()
+
+- Funktion zur Änderung der Richtung (CalculateDirections)
+- Funktion zur Änderung der Position (CalculatePositions)
