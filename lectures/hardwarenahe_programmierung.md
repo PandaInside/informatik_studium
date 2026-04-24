@@ -128,7 +128,7 @@
             - Wenn **Call by Reference** benötigt wird, muss dies als dieses ausgewiesen werden mit `&` (`std::addressof()`) am Übergabeparameter 
                 --> `mischen(std::array<Spielkarte, anzahl_karten> &kartenstapel)`
                 --> Wenn dies in der Methodesignatur angegeben wurde, wird dies von der IDE überall als Referenz ausgewiesen 
-                --> In der Methode `mischen` wird die Referenz des riginalobjektes übergeben
+                --> In der Methode `mischen` wird die Referenz des Originalobjektes übergeben
             - *Alternative*: mit `*` (Pointer -> Adresse des Objektes) statt `&`
                 --> `mischen(std::array<Spielkarte, anzahl_karten> *kartenstapel)`
                 --> `(*kartenstapel)[0]` = Dereferenzieren eines Elementes 
@@ -141,7 +141,7 @@
             --> *Alternative*: `std::ranges::shuffle(&r: kartenstapel, &g:gen)` --> range sucht sich selbst Anfang und Ende des übergebenen Objektes
         - `std::count_if(first: kartenstapel.begin(), last: kartenstapel.end(), pred: [](const auto &karte: const Spielkarte &) { return karte.wert() == -2; }))`
             --> `pred` = Prädikat = boolscher Wert
-                --> Lamda-Ausdrücke beginnen immer mit `[]` --> Hierin stehen Variablen, die wir ins Lamda übergeben wolen, weil der Body darauf zugreift (capture clause)
+                --> Lamda-Ausdrücke beginnen immer mit `[]` --> Hierin stehen Variablen, die wir ins Lamda übergeben wollen, weil der Body darauf zugreift (capture clause)
                     --> `pred: [&erwarteter_wert](const auto &karte: const Spielkarte &) { return k... REQUIRE(anzahl == anzahl_spielkarten_pro_kartenwert.at(k: erwarteter_wert)); })` (Skyjo v4 Zeile 139)
                 --> `(const auto &karte: const Spielkarte &)` --> `const` = nur konstande Memberfunktionen können aufgerufen werden --> nur Leserechte
                 --> `{ return karte.wert() == -2; }` --> gibt zurück, ob der Wert -2 ist
@@ -168,6 +168,9 @@
         - **Verschiebe-Semantik** = macht Kopieren effizient
         - `.h` oder`.hpp` = Header-Dateien
             --> relevante Infos um Softwarekomponente verwenden zu können -> Schnittstellendefinition 
+            --> Compiler braucht Infos wie Objekte aus Datensicht aussehen --> Welche Wert werden in der Methode übergeben?
+            --> `extern const ...` = Daten stehen an anderer Stelle
+
             
             ``` C++
             class C {
@@ -178,6 +181,8 @@
 
         - `.cp` oder `.cpp` = Implementierungs-Dateien
             --> eigentlich Implementierung der Schnittstelle mit voll qualifiertem Methodennamen
+            --> `static` = `private` Prozeduren
+            ---> `#ifndef MEIN_SYMBOL #define MEIN_SYMBOL #endif` oder `#pragma once` --> ==One Definition Rule==
 
             ``` C++
             void C::f() {...} // Defintiion
@@ -186,6 +191,12 @@
         - **Präprozessor** läuft vor Compiler, er implementiert alle Abhängigkeiten
         - `call` macht neuen Callstack auf
         - Linker füllt Lücken auf
+        - `namespace` (analog zu Packages in Java) ist anonym
+        - 4GB Addressraum
+        - statisches und dynamisches Linken
+          - statisch = Code wird direkt geladen - Nachteil: größer
+          - dynamisch = Code wird on demand geladen
+
 
 ---
 
@@ -243,7 +254,7 @@ void demo() {
     - Breite (pf_width)
     - Höhe (pf_height) 
     - Head (pf_head_content)
-    - Footer (pf_footer_content)
+    - Footer (pf_footer_content) --> lass ich offen für den variablen String "Won" oder "Loose"
   - Bricks:
     - Buchstabe (bricks_char)
     - Anzahl (bricks_count)

@@ -23,7 +23,7 @@ Spring ist modular aufgebaut, wodurch die Anwendungen flexibel entwickelt werden
 | Web (MVC / Remoting)      | WebMVC, Thymeleaf, JSP, Websocket, Portlet     | Die Schnittstelle zum Benutzer / Fremdsystem kann durch Servlet Container oder Websocket-Implementierung realisiert werden.<br>Spring integriert auch HTML Frameworks, wie Java Server Pages.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | AOP / Instrumentation     | Spring AOP, AspectJ                            | Spring biete gut & einfach einsetzbare Überwachung der Performance und Fehler sowie Loggings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
-![](assets/AufgabenSpringContainer.png)
+![img](../assets/AufgabenSpringContainer.png)
 
 Der Spring Container ist das Kernstück, das unsere Anwendung startet und für den korrekten Ablauf sorgen wird. 
 Häufig wird im Nicht-Spring-Sprachraum von einem Anwendungsserver gesprochen.
@@ -117,8 +117,8 @@ Im Haupt-Package wird im Wesentlichen nach Use Cases eingeteilt. Die Anwendungsf
 
 | Modell                                            | Beschreibung                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Skizze                                    |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| Client/Server-Architektur (2-Schicht-Architektur) | - Client (Nutzer) stellt Request (Anfrage) nach Service (Dienst) an Server (Diensterbringer)<br>- Server beantwortet Request mit Response (Antwort), indem er Ergebnis des Service an Client zurücksendet.                                                                                                                                                                                                                                                                                                                                                                                                                                                    | ![](assets/Client-Server-Architektur.png) |
-| 3-Schicht-Architektur                             | - Jede Schicht kann auf anderen physischen Rechner bzw. Adressräumen (JVM) laufen.<br>- Diese Entkopplung bringt den Vorteil, dass jede Schicht kann separat entwickelt werden.<br>- Zugriffe sollten nur innerhalb einer Schicht oder die nächstfolgende Schicht erlaubt werden.<br>- Je zentraler die Geschäftslogik liegt, desto wartbarer, testbarer und wiederverwendbarer ist das System.<br><br>1. Präsentationsschicht (Frontend): Läuft auf eigenen Gerät, z.B. Smartphone.<br>2. Geschäftslogiklogikschicht (Middleware): Inhaltliche Abläufe.<br>3. Datenbankschicht (Backend): Eigenständiger Datenbankserver, auf den 2. Schicht zugreifen kann. | ![](assets/3-Schicht-Architektur.png)     |
+| Client/Server-Architektur (2-Schicht-Architektur) | - Client (Nutzer) stellt Request (Anfrage) nach Service (Dienst) an Server (Diensterbringer)<br>- Server beantwortet Request mit Response (Antwort), indem er Ergebnis des Service an Client zurücksendet.                                                                                                                                                                                                                                                                                                                                                                                                                                                    | ![img](../assets/Client-Server-Architektur.png) |
+| 3-Schicht-Architektur                             | - Jede Schicht kann auf anderen physischen Rechner bzw. Adressräumen (JVM) laufen.<br>- Diese Entkopplung bringt den Vorteil, dass jede Schicht kann separat entwickelt werden.<br>- Zugriffe sollten nur innerhalb einer Schicht oder die nächstfolgende Schicht erlaubt werden.<br>- Je zentraler die Geschäftslogik liegt, desto wartbarer, testbarer und wiederverwendbarer ist das System.<br><br>1. Präsentationsschicht (Frontend): Läuft auf eigenen Gerät, z.B. Smartphone.<br>2. Geschäftslogiklogikschicht (Middleware): Inhaltliche Abläufe.<br>3. Datenbankschicht (Backend): Eigenständiger Datenbankserver, auf den 2. Schicht zugreifen kann. | ![img](../assets/3-Schicht-Architektur.png)     |
 
 **Sonstige Modelle:** Microservice-Architektur (1 Microservice nach Client/Server-Architektur aufgebaut)
 
@@ -204,8 +204,8 @@ Darüber hinaus wird durch ein Komponentenmodell eine **Infrastruktur** angebote
 
 |           | Beschreibung                                                                                                                                                                                                                                                                            | Einsatzgebiet                                       | Skizze    | 
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | --- |
-| synchron  | - Sender wartet auf eine Antwort** und kann nicht weiterarbeiten, was zu Blockaden führen kann.<br>- Einfacher zu verstehen und zu implementieren, außer Threads oder Listener werden verwendet.<br>- Kann zu Ineffizienzen führen, wenn Aufrufer auf langwierige Prozesse warten muss. | Client/Server Architekturen, Audio-/Video-Messaging |  ![](assets/synchroneKommunikation.png)   |
-| asynchron | - Sender wartet auf keine Antwort und kann weiterarbeiten.<br>- Kommunikationspartner agieren unabhängig.<br>- Verarbeitung / Antwort erfolgt später z.B. durch Callback, Queue oder Polling (wiederholtes Anfragen).                                                                                            | Mail-Systeme, Newsletter, Chat-App                  |  ![](assets/asynchroneKommunikation.png)   |
+| synchron  | - Sender wartet auf eine Antwort** und kann nicht weiterarbeiten, was zu Blockaden führen kann.<br>- Einfacher zu verstehen und zu implementieren, außer Threads oder Listener werden verwendet.<br>- Kann zu Ineffizienzen führen, wenn Aufrufer auf langwierige Prozesse warten muss. | Client/Server Architekturen, Audio-/Video-Messaging |  ![img](../assets/synchroneKommunikation.png)   |
+| asynchron | - Sender wartet auf keine Antwort und kann weiterarbeiten.<br>- Kommunikationspartner agieren unabhängig.<br>- Verarbeitung / Antwort erfolgt später z.B. durch Callback, Queue oder Polling (wiederholtes Anfragen).                                                                                            | Mail-Systeme, Newsletter, Chat-App                  |  ![img](../assets/asynchroneKommunikation.png)   |
 
 ##### Was passiert, wenn ein Aufruf nicht beantwortet wird? Wann weiß ich, dass die Antwort nicht mehr kommen wird?
 
@@ -286,7 +286,7 @@ Transparenz bedeutet zunächst, dass man durch irgendetwas hindurchsehen kann od
 12. **DisposableBean::destroy()**
 	- Wenn die Anwendung beendet und der Container heruntergefahren wird, ruft der Container für die Beans, die das Interface implementieren, die entsprechende Methode auf. Damit können ebenso geeignete Aufräumarbeiten durchgeführt werden.
 
-![](assets/Lebenszyklus.png)
+![img](../assets/Lebenszyklus.png)
 
 ### Annotationen & Interfaces
 
@@ -400,9 +400,9 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 6. Das **DispatcherServlet kennt die konkrete View** und **integriert die Daten** aus dem Model-Objekt in die **View Templates** (via Template Engine Thymeleaf). 
 7. Die finale Web-Ressource wird an den Browser/Client ausgeliefert und angezeigt.
 
-	![](assets/RequestVerarbeitung.png)
+	![img](../assets/RequestVerarbeitung.png)
 
-	![](assets/ControllerMethode.png)
+	![img](../assets/ControllerMethode.png)
 
 ### Model (Daten)
 ##### Spring Data
@@ -456,7 +456,7 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 - ==Wenn zwei **Objekte laut `equals()` gleich sind**, müssen sie **denselben Hashcode** haben==, damit sie korrekt in Collections verwaltet werden können.
 - **Ohne Übereinstimmung** kann es zu **inkonsistentem Verhalten von Collections** kommen
 
-![](assets/BaseEntity.png)
+![img](../assets/BaseEntity.png)
 
 ##### Assoziationen
 
@@ -555,7 +555,7 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 <br>
 - Um eigene Query-Methoden zu definieren, nutzt man die Assoziation `@Query` über einer Respository-Methode. 
 
-	![](assets/JPAQuery.png)
+	![img](../assets/JPAQuery.png)
 
 ###### Komponenten
 
@@ -590,7 +590,7 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 - Gleichzeitige Aktivierung mit `CascadeType.ALL`
 - **Nachteil**: Komplexität und damit einhergehende Abhängigkeiten der Speicheroperationen nehmen zu
 
-![](assets/Kaskadierung.png)
+![img](../assets/Kaskadierung.png)
 
 ##### Vererbungs-Strategien
 
@@ -599,12 +599,12 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 - Hierdurch wird gekennzeichnet, dass Spring für das Interface keine Repository Implementierung erzeugen soll. 
 - Da das Basis Interface im weiteren Verlauf nicht verwendet wird, muss auch keine entsprechende Repository Bean von Spring angelegt werden.
 
-![](assets/RespositoryVererbung.png)
+![img](../assets/RespositoryVererbung.png)
 
 - In JPA Spezifikation werden 3 Strategien beschrieben, wie die mit Vererbung ausgestattet Objekte in die Datenbank persistiert werden können.
 - Standard-Fall, der keiner Konfiguration bedarf, ist `InheritanceType.SINGLE_TABLE`
 
-![](assets/Klassenvererbung.png)
+![img](../assets/Klassenvererbung.png)
 
 | Single Table Strategie                                                                                                | Joined Strategie                                                                                                                                                                                        | Table per Class                                                                                                                                                                                                                                                                              |
 | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -629,9 +629,9 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 
 - Eingebettete Objekte (`@Embedded` & `@Embeddable`) und Aufzählungen werden innerhalb der Tabelle der übergeordneten Entität gespeichert.
 
-![](assets/Embedded.png)
+![img](../assets/Embedded.png)
 
-![](assets/Aufzähungen.png)
+![img](../assets/Aufzähungen.png)
 
 ##### EntityManager
 
@@ -645,7 +645,7 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 - Spring stellt **Standard-Klassenimplementierungen in Abhängigkeit von der jeweiligen Datenbanktechnologie** zur Verfügung (~DAL)
 - Das neue Interface ist von dem allgemeinen Interface `Jpa-Repository` abgleitet, das die nachfolgenden Methoden und noch mehr zur Verfügung stellt:
 
-	![](assets/Jpa-Repository.png)
+	![img](../assets/Jpa-Repository.png)
 
 | Methode                           | Beschreibung                                                                                                                                                                          |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -670,7 +670,7 @@ In einer Spring-Boot-Anwendung können Log-Levels durch Hinzufügen von Einträg
 > ***Callback-Methoden*** werden aufgrund des Eintretens eines Ereignisses aufgerufen.
 > ***POJO*** ist eine reguläre Java-Klasse, die Daten kapselt und Methoden zum Zugriff auf und zur Bearbeitung dieser Daten bereitstellt.
 
-![](assets/Snag_8bc9fac1.png)
+![img](../assets/EntityListener.png)
 
 ### View (Frontend)
 
@@ -851,7 +851,7 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 	- einfachere Implementierung
 	- Initialisierung so spät wie möglich nach explizitem Methodenaufruf 
 <br>
-![](assets/SpringContainer%20mit%20Beans.png)
+![img](../assets/SpringContainer%20mit%20Beans.png)
 <br>
 - Objektbindungen und Objektabhängigkeiten erfolgen durch eine dritte Instanz (Framework oder Laufzeitsystem).
 - Konkret kann dies durch Dependency Injection (Injizieren von Abhängigkeiten), Reflection (inspizieren und ändern von Laufzeit-Objekten) oder Dependency Lookup realisiert werden.
@@ -868,7 +868,7 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 | Kernfunktion des IoC Containers                    | - **Dependency Injection (DI)** eine Technik zur Implementierung von IoC.<br><br>- Er ermöglicht die Erstellung und das Lebenszyklusmanagement, indem er **Abhängigkeiten von Klassen** basierend auf der Konfiguration **extern injiziert** statt sie innerhalb der Klassen selbst zu instanziieren.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Ergebnis der IoC Containerarbeit                   | - DI fördert lose Kopplung und erleichtert die Wartung und das Testen von Software.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
-![](assets/IoCContainer.png)
+![img](../assets/IoCContainer.png)
 
 - Soll der IoC Container eine Injektion vornehmen und weiß nicht, welche Implementierung (mehrere Klassen von einem Interface abgeleitet) er verwenden soll, wird die Annotation `@Qualifier("...")` an beide betroffenen Klassen gehängt.
 
@@ -891,7 +891,7 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 - Verwaltet die web-spezifischen Beans wie Controller und View-Resolver Beans
 - Das DispatcherServlet verwendet den WebApplicationContext
 
-![](assets/WebApplicationContext.png)
+![img](../assets/WebApplicationContext.png)
 
 ##### Vorteile der Unterscheidung beider Kontexte
 
@@ -905,9 +905,9 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 
 | Art                  | Beispiel                             | Vorteile                                                                                                                                                                                                                                           | Nachteile                                                                                                                                                                                                                                                                                                                     |
 | -------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Setter Injection     | ![](assets/SetterInjection.png)      | + Einfügen von Abhängigkeiten über Setter-Methoden nach der Bean-Erstellung nützlich für **optionale Abhängigkeiten**<br>+ Flexibilität                                                                                                            | - Birgt das Risiko, dass Beans teilweise ohne notwendige Konfigurationen genutzt werden, wenn Set-Methode nicht ausgeführt wird. → NullPointerInjection<br>- weniger sicher                                                                                                                                                   |
-| Constructor Injection | ![](assets/ConstructorInjection.png) | + Erzwingt Vollständigkeit der Abhängigkeiten bei Instanziierung<br>Indizien für nötiges Refactoring sind erkennbar.<br>+ Fördert Unveränderlichkeit<br>+ Erleichtert das Testen<br>+ Sicherer Code, um gewisse NullPointerExceptions zu vermeiden | - Kann bei einer großen Anzahl von Abhängigkeiten unübersichtlich werden<br>Wird bei dieser Klasse noch hohe Kohäsion eingehalten oder wird Refactoring nötig?<br>- Enthält nun BoilerplateCode, den es zu vermeiden gilt.<br>- Bei fehlender Angabe des Parameters tritt bei Konstruktoraufruf bereits ein Build-Fehler ein. |
-| Field Injection      | ![](assets/FieldInjection.png)       | + Bekannt für **Einfachheit**, da sie direkte Injections ohne Setter und Constructor erlaubt.<br>+ Weniger und verständlicherer Code                                                                                                               | - Führt zu einer **schwierigen Testbarkeit** und potentiellen Missachtung des SOLID-Prinzips                                                                                                                                                                                                                                  |
+| Setter Injection     | ![img](../assets/SetterInjection.png)      | + Einfügen von Abhängigkeiten über Setter-Methoden nach der Bean-Erstellung nützlich für **optionale Abhängigkeiten**<br>+ Flexibilität                                                                                                            | - Birgt das Risiko, dass Beans teilweise ohne notwendige Konfigurationen genutzt werden, wenn Set-Methode nicht ausgeführt wird. → NullPointerInjection<br>- weniger sicher                                                                                                                                                   |
+| Constructor Injection | ![img](../assets/ConstructorInjection.png) | + Erzwingt Vollständigkeit der Abhängigkeiten bei Instanziierung<br>Indizien für nötiges Refactoring sind erkennbar.<br>+ Fördert Unveränderlichkeit<br>+ Erleichtert das Testen<br>+ Sicherer Code, um gewisse NullPointerExceptions zu vermeiden | - Kann bei einer großen Anzahl von Abhängigkeiten unübersichtlich werden<br>Wird bei dieser Klasse noch hohe Kohäsion eingehalten oder wird Refactoring nötig?<br>- Enthält nun BoilerplateCode, den es zu vermeiden gilt.<br>- Bei fehlender Angabe des Parameters tritt bei Konstruktoraufruf bereits ein Build-Fehler ein. |
+| Field Injection      | ![img](../assets/FieldInjection.png)       | + Bekannt für **Einfachheit**, da sie direkte Injections ohne Setter und Constructor erlaubt.<br>+ Weniger und verständlicherer Code                                                                                                               | - Führt zu einer **schwierigen Testbarkeit** und potentiellen Missachtung des SOLID-Prinzips                                                                                                                                                                                                                                  |
 
 ### Scopes
 
@@ -1082,7 +1082,7 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 	- Durch den Aufruf von `passwordEncoder()` wird mittels einer Spring eigenen PasswordEncoderFactories eine Bean generiert, die standardmäßig als Passwort Verschlüsselung das **BCrypt Verfahren** verwendet, eine **Hashfunktion für das Speichern von Passwörtern**. 
 	- Dabei wird **aus dem Passwort und einem Salt** für das Passwort der **Hashwert berechnet**. Salt ist eine zufällige Zeichenfolge, die vom Verfahren generiert wird.
 
-![](assets/Snag_8c45ee42.png)
+![img](../assets/AuthenticationManager.png)
 
 ##### URL-basierte Authentifizierung
 
@@ -1120,7 +1120,7 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 > Ermöglicht es Benutzern, sich **automatisch anzumelden**, ohne ihre Anmeldedaten erneut einzugeben.
 > Kann die Sicherheit einer Anwendung verbessern, indem sie die Häufigkeit reduziert, mit der Benutzer ihre Anmeldedaten eingeben müssen.
 
-![](assets/Snag_8c25e1ea.png)
+![img](../assets/WebSecurityConfig.png)
 
 ### Autorisierung
 
@@ -1154,7 +1154,7 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 - Mit `@ModelAttribute` wird ein Attribute unter dem jeweiligen Namen (z.B. `myform`) erzeugt, das bedeutet, dass in der zugehörigen HTML Datei ein Thymeleaf-Objekt mit diesem Namen existiert und in der Controller Methode unter dem zugewiesenen Namen verwendet wird.
 - Der Parameter `BindingResult` ist eine Erweiterung des Error Interfaces, in dem Validierungsfehlermeldungen abgelegt und weiterverarbeitet werden können.
 
-![](assets/Validierung.png)
+![img](../assets/Validierung.png)
 
 ##### Validator
 
@@ -1164,7 +1164,7 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 - Innerhalb der Methode wird zunächst das target Objekt zu `UserCreateForm` gecastet und dann die Validierung des Passwortes und der E Mail angestoßen.
 - Damit eine Bindung von Webformular und Validator stattfindet, wird im Controller die Methode `initBinder` definiert, die durch die Annotation `@InitBinder` mit dem Zusatz einer Webformular-Komponente (z.B. myform) gekennzeichnet ist, die in der HTML Datei mit `th:object="${myform}"` im form-Element angegeben wird.
 
-![](assets/Snag_8c0261e7.png)
+![img](../assets/Validator.png)
 
 ##### Methoden
 
@@ -1208,16 +1208,16 @@ Verwaltet Ressourcen, Middleware-Dienste und ermöglicht die Ausführung von Ges
 - SSL Zertifikat benötigt
 - Bestandteil einer Java Installation ist das Kommandozeilen Tool `keytool`, das `public-key/private-key` Paare generieren kann und diese in einem Java Key Store abspeichert
 - Key Tool Optionen:
-	![](assets/Snag_8c73cb0b.png)
+	![img](../assets/KeyToolOptionen.png)
 - `application.properties`:
-	![](assets/Snag_8c74cb25.png)
+	![img](../assets/SSLConfig.png)
 
 ## Warenkorb
 
-![](assets/Snag_8c10c223.png)
+![img](../assets/WarenkorbProzess.png)
 
 ## Login 
-![](assets/Snag_8c22110c.png)
+![img](../assets/Login.png)
 
 ### Wie wird das Passwort übertragen?
 
@@ -1340,7 +1340,7 @@ Merkmale festgelegt:
 - Transaktionen auf mehreren Datenbank = verteilte Transaktion
 -  Der Ressourcen-Manager ist für den Datenbankzugriff auf die Daten (Objekte) der Transaktion verantwortlich.
 
-![](assets/Transaktion.png)
+![img](../assets/Transaktion.png)
 
 1. Ausführen der transaktionalen Methode.
 2. Anlegen einer neuen Transaktion oder Verwenden einer existierenden Transaktion.

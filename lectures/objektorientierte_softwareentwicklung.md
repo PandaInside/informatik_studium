@@ -271,13 +271,13 @@ Prinzipien, um ein System in Teilsysteme zu zerlegen
 <br>
 - Vermeide `if` bzw. `switch`, wenn es sich auch mit Vererbung lösen lässt!
 
-	![](assets/Vererbung.png)
+	![img](../assets/Vererbung.png)
 <br>
 - Vermeide null (= kein Referenzwert) als möglichen Wert, insbesondere als Rückgabewert oder als Parameter bei einem Funktionsaufruf!
 - Null-Objekt, wenn kein gültiger Wert (Spiel: Kommando) eingegeben wurde. Ersetzt Rückgabe von null. 
 - **Vorteil:** Kein Test auf null mehr nötig.
 
-	![](assets/NullObjekt.png)
+	![img](../assets/NullObjekt.png)
 
 ### Optionals
 - Vermeidung `null` als Rückgabewert durch Optionals ("Kisten") - instanziierte Objekte, die entweder leer oder mit einem Wert sind.
@@ -378,7 +378,7 @@ private void printSomething( String text ) {
 - Die Implementierung von printSomething soll austauschbar sein.
 - Damit kann das Spiel mit verschiedenen GUIs laufen.
 
-![](assets/Austauschbarkeit.png)
+![img](../assets/Austauschbarkeit.png)
 
 ### Dependency Injection
 - Die Möglichkeit, Abhängigkeiten zur Laufzeit festzulegen.
@@ -561,9 +561,9 @@ public interface GUI {
 	
 	| Strategie   | Verhalten                                                                                             | Verwendung                                                                                                                                                                                                                                     | Vorteil                  | Nachteil                                                                                | Beispiel                   |
 	| ----------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | --------------------------------------------------------------------------------------- | -------------------------- |
-	| Fail Silent | Fehler ignorieren<br>Fehler wird verschluckt → System läuft aber scheinbar weiter.                    | Unkritischen UI- oder Logging-Fehlern (selten sinnvoll).                                                                                                                                                                                       | keine Unterbrechung      | Fehler bleibt verborgen<br>Schwer zu debuggen<br>Datenverlust<br>inkonsistenter Zustand | ![](assets/FailSilent.png) |
-	| Fail Fast   | Fehler sofort melden und sichtbar machen<br>Stoppt Ausführung früh, sobald Inkonsistenz erkannt wird. | API-Verträgen<br>Validierungen<br>Kritische Invarianten (= unveränderliche Bedingungen, Eigenschaften oder Größen, <br>die während der Ausführung eines Algorithmus, einer Transformation oder bei Koordinatensystemwechseln konstant bleiben) | Fehler leicht auffindbar | ggf. Absturz                                                                            | ![](assets/FailFast.png)   |
-	| Fail Safe   | Trotz Fehler sicher weiterarbeiten.<br>System bleibt lauffähig, nutzt Default- oder Ersatzwerte.      | Systemdiensten<br>Hintergrundjobs<br>Caches                                                                                                                                                                                                    | Robust im Betrieb        | evtl. falsche Daten                                                                     | ![](assets/FailSafe.png)   |
+	| Fail Silent | Fehler ignorieren<br>Fehler wird verschluckt → System läuft aber scheinbar weiter.                    | Unkritischen UI- oder Logging-Fehlern (selten sinnvoll).                                                                                                                                                                                       | keine Unterbrechung      | Fehler bleibt verborgen<br>Schwer zu debuggen<br>Datenverlust<br>inkonsistenter Zustand | ![img](../assets/FailSilent.png) |
+	| Fail Fast   | Fehler sofort melden und sichtbar machen<br>Stoppt Ausführung früh, sobald Inkonsistenz erkannt wird. | API-Verträgen<br>Validierungen<br>Kritische Invarianten (= unveränderliche Bedingungen, Eigenschaften oder Größen, <br>die während der Ausführung eines Algorithmus, einer Transformation oder bei Koordinatensystemwechseln konstant bleiben) | Fehler leicht auffindbar | ggf. Absturz                                                                            | ![img](../assets/FailFast.png)   |
+	| Fail Safe   | Trotz Fehler sicher weiterarbeiten.<br>System bleibt lauffähig, nutzt Default- oder Ersatzwerte.      | Systemdiensten<br>Hintergrundjobs<br>Caches                                                                                                                                                                                                    | Robust im Betrieb        | evtl. falsche Daten                                                                     | ![img](../assets/FailSafe.png)   |
 <br>
 - Merke: Fail Fast im Code - Fail Safe im System
 - Entwickle so, dass Fehler früh erkannt werden, aber das Gesamtsystem stabil bleibt.
@@ -805,7 +805,7 @@ public interface GUI {
 
 ## Automatische Code Reviews
 ### Qualität der Fehlererkennung
-![](assets/QualitätFehlererkennung.png)
+![img](../assets/QualitätFehlererkennung.png)
 
 ### Verfahren
 - Kontrollflussanalyse
@@ -911,7 +911,7 @@ Zeichen für schlechtes Design, die in einem Review erkannt werden sollten:
 	- beschreibt, wie viele Schritte ein Algorithmus benötigt, um ein Problem in Abhängigkeit der Eingangsgröße n zu lösen
 	- Die **O-Notation** hilft uns den **Aufwand eines Algorithmus abstrakt** und elegant zu **beschreiben** und die Komplexität einzuschätzen. Sie **abstrahiert diese Komplexität** und hilft, **Algorithmen zu vergleichen**
 	
-	![](assets/ONotation.png)
+	![img](../assets/ONotation.png)
 	<br>
 	- Merke: Bei Aneinanderreihung von Operationen, kann Gesamtkomplexität als Summe notiert werden, wobei **der stärkste Summand das Wachstumsverhalten dominiert**
 	<br>
@@ -1020,7 +1020,7 @@ int anzahl( int[] a, int[] b ) {
 }
 ```
 
-![](assets/cfg.png)
+![img](../assets/cfg.png)
 
 ###### Eigenschaften
 - **obere Schranke für Zahl der Testfälle**, die für eine vollständige Zweigüberdeckung (C<sub>1</sub> - Überdeckung) nötig sind
@@ -1070,7 +1070,7 @@ int anzahl( int[] a, int[] b ) {
 		}
 		```
 		
-		![](assets/NotenKnoten.png)
+		![img](../assets/NotenKnoten.png)
 	<br>
 	- CC = 1:
 		```Java
@@ -1084,7 +1084,7 @@ int anzahl( int[] a, int[] b ) {
 		note = notenskala.get( pkt );
 		```
 		
-		![](assets/NotenKnoten2.png)
+		![img](../assets/NotenKnoten2.png)
 	<br>
 
 ###### Diskussion
@@ -1134,14 +1134,14 @@ int anzahl( int[] a, int[] b ) {
 - Betrachte nun für all (n - 1)<sup>2</sup> / 2 Paare von Methoden (M<sub>i</sub>, M<sub>k</sub>) mit i ≠ k die Durchschnittsmenge A<sub>ik</sub> = A<sub>i</sub> ∩ A<sub>k</sub>
 - LCOM = Zahl der leeren Durchschnitte A<sub>ik</sub> - Zahl der nichtleeren Durchschnitte A<sub>ik</sub> (oder 0, falls der Wert negativ ist)
 
-	![](assets/LCOM.png)
+	![img](../assets/LCOM.png)
 
 ## Patterns (Muster)
 - **Eine Lösung für wiederkehrende Probleme**
 - Muster müssen so allgemein formuliert sein, dass die nicht nur für eine bestimmte Situation anwendbar sind, sondern für eine ganze Reihe von ähnlichen Situationen.
 - Ein Muster ist eine **dreiteilige Regel**, die die **Beziehung zwischen** einem bestimmten **Kontext**, einem **Problem** und einer **Lösung** ausdrückt.
 
-	![](assets/Muster.png)
+	![img](../assets/Muster.png)
 
 - Erfahrungen werden in wiederverwendbarer Form dokumentiert.
 - Muster ermöglichen das wiederholte Nutzen von Lösungen, die sich als gut erwiesen.
@@ -1220,7 +1220,7 @@ int anzahl( int[] a, int[] b ) {
 | + `null`-Referenzen werden vermieden<br>+ Code wird lesbarer, da Abfragen auf mögliche `null`-Werte entfallen | - einiger Aufwand, wenn das Muster nachträglich in bestehende Programme eingefügt wird |
 
 ##### Diagramm
-![](assets/NullObjectPattern.png)
+![img](../assets/NullObjectPattern.png)
 
 ### Observer (Entwurfsmuster "Beobachter")
 - Bekannt aus JavaFX
@@ -1258,14 +1258,14 @@ public class Temperaturdaten {
 ```
 
 ##### Diagramm
-![](assets/ObserverPattern.png)
+![img](../assets/ObserverPattern.png)
 
 ### Model-View-Controller (Architekturmuster)
 - Dieselben Daten werden auf verschiedene Weisen angezeigt → mehrere Views
 - Dieselben Daten können auf verschiedene Weisen geändert werden → mehrere Controller
 - Die Unterstützung mehrerer Views und Controller soll keinen Einfluss auf die Kernfunktionen der Anwendung (die im Model programmiert sind) haben.
 
-	![](assets/MVC.png)
+	![img](../assets/MVC.png)
 
 **Model:**
 - stellt den aktuellen Zustand der Geschäftsdaten dar
@@ -1313,7 +1313,7 @@ public class Klimaanlage {
 ```
 
 ##### Diagramm
-![](assets/MVCPattern.png)
+![img](../assets/MVCPattern.png)
 
 ### Strategy (Entwurfsmuster "Strategie")
 - Welcher Algorithmus (von mehreren möglichen) genau verwendet wird, wird zur Laufzeit entschieden
@@ -1324,8 +1324,8 @@ public class Klimaanlage {
 	2. Trenne das, was konstant bleibt, von dem, was sich ändern kann. Dazu wird das, was sich ändert, in eigene Klasse gepackt.
 
 ##### Diagramm
-![](assets/StrategyPattern2.png)
-![](assets/StrategyPattern.png)
+![img](../assets/StrategyPattern2.png)
+![img](../assets/StrategyPattern.png)
 
 ### State (Entwurfsmuster "Zustand")
 - Nutzung: Immer, wenn sich eine Operation je nach Zustand eines Objektes anders auswirken soll
@@ -1352,8 +1352,8 @@ private void drueckeKnopf3 {
 ```
 
 ##### Diagramm
-![](assets/StatePattern2.png)
-![](assets/StatePattern.png)
+![img](../assets/StatePattern2.png)
+![img](../assets/StatePattern.png)
 
 ### Decorator (Entwurfsmuster "Dekorierer")
 - Einsatzzweck: Einer Klasse sollen zur Laufzeit weitere Zusätze/Verhaltensweisen in beliebiger Kombination hinzugefügt werden können.
@@ -1427,7 +1427,7 @@ public class Schirmchen extends Dekorierer {
 ```
 
 ##### Diagramm
-![](assets/DecoratorPattern.png)
+![img](../assets/DecoratorPattern.png)
 
 ### Builder (Entwurfsmuster "Erbauer")
 - trennt die schrittweise Konstruktion komplexer Objekte von deren Darstellung
@@ -1498,8 +1498,8 @@ public class MietwagenBuchung {
 ```
 
 ##### Diagramm
-![](assets/FassadePattern2.png)
-![](assets/FassadePattern.png)
+![img](../assets/FassadePattern2.png)
+![img](../assets/FassadePattern.png)
 
 ### Proxy (Entwurfsmuster)
 - Wir möchten einen Dienst nutzen
@@ -1518,7 +1518,7 @@ public class MietwagenBuchung {
 	- Verfügbarkeitsrisiko
 
 ##### Diagramm
-![](assets/ProxyPattern.png)
+![img](../assets/ProxyPattern.png)
 
 ### Caching Proxy
 - Lösungsansatz:
@@ -1527,7 +1527,7 @@ public class MietwagenBuchung {
 	- Anwendung arbeitet mit Proxy-Objekt, das genauso aussieht wie das "echte" Datenobjekt, aber intern nur bei Bedarf "teures" Objekt nutzt (neuer API-Call)
 
 ##### Diagramm
-![](assets/CachingProxyPattern.png)
+![img](../assets/CachingProxyPattern.png)
 
 ### Remote Proxy ("Entfernter Proxy")
 - Wunsch: Verwendung der Methoden eines entfernten Objektes, als würde es sich um ein lokales Objekt handeln und das möglichst ohne zusätzlichen Code
@@ -1543,7 +1543,7 @@ public class MietwagenBuchung {
 - Proxy-Objekte kümmern sich um die netzwerkspezifischen Dinge
 
 ##### Diagramm
-![](assets/RemoteProxyPattern.png)
+![img](../assets/RemoteProxyPattern.png)
 
 ##### Standards für Kommunikation in OO-Systemen
 - **Java RMI** (Remote Method Invocation) ist eine API zur Entwicklung verteilter Anwendungen, die es ermöglicht, Methoden von Objekten in einer anderen Java Virtual Machine (JVM), ggf. auf anderen Hosts, aufzurufen. RMI nutzt Stubs und Skeletons für die Kommunikation, oft über die RMI-Registry (Port 1099).
@@ -1646,7 +1646,7 @@ public class MietwagenBuchung {
 → Objektadapter sind die häufigste Form des Adapter-Patterns in modernen OOP-Sprachen
 
 ##### Diagramm
-![](assets/Adapter-Design-Pattern.webp)
+![img](../assets/Adapter-Design-Pattern.webp)
 
 ## Proxy, Caching Proxy und Adapter
 
@@ -1746,7 +1746,7 @@ public class MietwagenBuchung {
 - Modellierung des Dateisystems in Java mit Objekten der Klasse `java.io.File`
 - `java.nio.file.Files` erlaubt weitere Dinge, z.B. Zugriff auf entfernte Dateisysteme
 
-![](assets/Streams.png)
+![img](../assets/Streams.png)
 
 ### Herausforderungen bei Dateiübertragung
 - **verschiedene Datenformate**: Bytes oder Unicode-Zeichen
@@ -1759,7 +1759,7 @@ public class MietwagenBuchung {
 ### Lösung: Datenströme
 - Können Daten von einer Datenquelle empfangen und/oder Daten an eine Datenquelle senden
 
-	![](assets/Streams2.png)
+	![img](../assets/Streams2.png)
 
 - Eine bestimmte Stream-Klasse weiß, wie ein bestimmtes Problem (Quellen-/Senkentyp, Datentyp, Verarbeitung) zu lösen ist.
 - Entwickler muss sich nicht um Details kümmern, sondern ruft einfach Methoden wie "lesen" oder "schreiben" auf.
@@ -1771,7 +1771,7 @@ public class MietwagenBuchung {
 | Ausgabestreams                 | `OutputStream` | `Writer`                         |
 
 ##### Eingabestreams (abstrakt)
-![](assets/EIngabeStreams.png)
+![img](../assets/EIngabeStreams.png)
 
 ##### Eigenschaften von Streams
 - Streams sollten mit `close()` geschlossen werden. 
@@ -1781,7 +1781,7 @@ public class MietwagenBuchung {
 	- Achtung: falls keine zu lesenden Daten vorliegen, steht read() !
 	- `available()` blockiert nicht und kann zur Prüfung verwendet werden, um zu lesende Daten vorliegen
 
-![](assets/UML.png)
+![img](../assets/UML.png)
 
 - <span style="color:red">OutputStreams</span> etc. ist eine abstrakte Klasse
 - Es ist z.B. noch nicht bekannt, was beim Aufruf von `close()` eigentlich zu tun ist (Datei schließen? netzwerk-Socket schließen?)
@@ -1793,18 +1793,18 @@ public class MietwagenBuchung {
 	- Ein/-Auslesen verschiedener Java-Datentypen
 - Oft müssen mehrere (aber nicht unbedingt alle) dieser Aufgaben gelöst werden
 
-![](assets/Streams3.png)
+![img](../assets/Streams3.png)
 
 ##### Streams zum Medien Zugriff
-![](assets/StreamsMedienZugriff.png)
+![img](../assets/StreamsMedienZugriff.png)
 
-![](assets/UML2.png)
+![img](../assets/UML2.png)
 
 - Bsp: <span style="color:red">FileOutputStream</span> ist eine konkrete Unterklasse der abstrakten Klasse OutputStream
 - Hier ist nun z.B. implementiert, was `close()` tut (eine Datei schließen).
 
 ##### Verwendung Medien Streams
-![](assets/VerwendungMedienStreams.png)
+![img](../assets/VerwendungMedienStreams.png)
 
 ```Java  
 import java.io.*;  
@@ -1818,20 +1818,20 @@ try( FileWriter fw = new FileWriter( "Datei.txt" ) ) {
 ```
 
 ##### Streams zur Verknüpfung von Streams
-![](assets/StreamsFürStreams.png)
+![img](../assets/StreamsFürStreams.png)
 
 ##### Streams zur Verarbeitung von Daten
-![](assets/StreamsFürDatenverarbeitung.png)
+![img](../assets/StreamsFürDatenverarbeitung.png)
 
-![](assets/UML3.png)
+![img](../assets/UML3.png)
 
 - <span style="color:red">FilterOutputStream</span> ist eine Klasse, von der verschiedene spezielle Filter (so heißen die Klassen zur Verarbeitung) erben
 
 ##### Streams zur Ein-/Ausgabe von primitiven Typen & Objekten
-![](assets/StreamsPrimitiveTypen.png)
+![img](../assets/StreamsPrimitiveTypen.png)
 
 ##### Verwendung von Datenstreams
-![](assets/Datenstreams.png)
+![img](../assets/Datenstreams.png)
 
 ##### Motivation: Objektserialisierung
 - Objekte existieren nur im Speicher, solange Programm läuft
@@ -1843,7 +1843,7 @@ try( FileWriter fw = new FileWriter( "Datei.txt" ) ) {
 - Alternative: XML, JSON
 
 ###### Verwendung von Objektstreams
-![](assets/Objektstreams.png)
+![img](../assets/Objektstreams.png)
 
 ###### Beispiel Objektserialisierung
 - FileOutputStream kann Bytes in eine Datei schreiben
@@ -1857,7 +1857,7 @@ try(ObjectOutputStream oos = new ObjectOutputStream( new FileOutputStream( "obje
 } catch( IOException e ) { ... }
 ```
 
-![](assets/OutputStream.png)
+![img](../assets/OutputStream.png)
 
 - FileInputStream kann Bytes aus einer Datei lesen
 - ObjectInputStream kann Bytes in Objekte wandeln
@@ -1871,7 +1871,7 @@ try( ObjectInputStream ois = new ObjectInputStream( new FileInputStream( "objekt
 catch ( IOException e ) { ... }
 ```
 
-![](assets/InputStream.png)
+![img](../assets/InputStream.png)
 
 ###### Bedingungen Objektserialisierung
 - Lesen muss in gleicher Reihenfolge wie Schreiben erfolgen.
@@ -1911,7 +1911,7 @@ try( BufferedReader eingabe = new BufferedReader( new InputStreamReader( System.
 }
 ```
 
-![](assets/BspNutzereingabe.png)
+![img](../assets/BspNutzereingabe.png)
 
 ###### Hack zum Testen von System.out.print;
 ```Java
@@ -1935,7 +1935,7 @@ public void TestSysout() {
 - textuelle Darstellung (kein Binärformat)
 - mögliches Serialisierungsformat
 
-	![](assets/XML1.png)
+	![img](../assets/XML1.png)
 
 ### Eigenschaften
 - Wohlgeformtheit (syntaktisch korrekt)
@@ -1958,16 +1958,16 @@ public void TestSysout() {
 	<br>
 - Als Quelle kann der Dateiname oder die URL des DTD-Dokuments angegeben werden
 
-![](assets/XML2.png)
-![](assets/DTD.png)
-![](assets/DTD2.png)
+![img](../assets/XML2.png)
+![img](../assets/DTD.png)
+![img](../assets/DTD2.png)
 
 ### XML Design
 ##### Attribute oder Elemente?
 - Häufige Frage bei der Entwicklung von XML-Strukturen: 
   Modellierung von Daten als Element oder Attribut?
 
-![](assets/XML3.png)
+![img](../assets/XML3.png)
 
 | Stilrichtlinien | Unter-Element                                                                                                                                                                                       | Attribut                                                                                                                                                 |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -11,15 +11,15 @@
 
 ### Zentrale Begrifflichkeiten
 
-[!NOTE] Eine **Anforderung** ist gemäß IEEE:
+> **Eine Anforderung ist gemäß IEEE:**
 > 1. Eine Bedingung oder Fähigkeit, die von einem Benutzer (Person oder System) zur Lösung eines Problems oder zur Erreichung eines Ziels benötigt wird.
 > 2. Eine Bedingung oder Fähigkeit, die ein System oder Teilsystem erfüllen oder besitzen muss, um einen Vertrag, eine Norm, eine Spezifikation oder andere, formell vorgegebene Dokumente zu erfüllen.
 > 3. Eine dokumentierte Repräsentation einer Bedingung oder Eigenschaft gemäß 1. oder 2.
 
-[!NOTE] Stakeholder:
+> **Stakeholder:**
 > Ein Stakeholder eines Systems ist eine Person oder Organisation, die **(direkt oder indirekt) Einfluss auf die Anforderungen des betrachteten Systems** hat.
 
-[!NOTE] Requirements Engineering:
+> ** Requirements Engineering:**
 > Ist ein systematischer und disziplinierter Ansatz zur Spezifikation und zum Management von Anforderungen mit den folgenden Zielen:
 > 1. Die relevanten Anforderungen zu kennen, Konsens unter den Stakeholdern über die Anforderungen herzustellen, die Anforderungen konform zu vorgegebenen Standards zu dokumentieren und die Anforderungen systematisch zu managen.
 > 2. Die Wünsche und Bedürfnisse der Stakeholder zu verstehen, zu dokumentieren sowie die Anforderungen zu spezifizieren und zu managen, um das Risiko zu minimieren, dass das System nicht den Wünschen und Bedürfnissen der Stakeholder entspricht.
@@ -50,19 +50,19 @@
 
 ### Arten von Anforderungen
 
-[!NOTE] Funktionale Anforderung:
+> **Funktionale Anforderung:**
 > Ist eine Anforderung bezüglich eines Ergebnisses oder eines Verhaltens, das von einer Funktion eines Systems bereitgestellt werden soll.
 > Verhaltens-, Struktur-, Funktionanforderungen
 
-[!NOTE] Nicht-funktionale Anforderung
+> **Nicht-funktionale Anforderung:**
 > ist ein Oberbegriff für Qualitätsanforderungen und Randbedingungen (Normen, juristische Anforderungen).
 > Eine **Qualitätsanforderung** ist eine Anforderung, die sich auf ein Qualitätsmerkmal bezieht, das nicht durch funktionale Anforderungen abgedeckt wird. Sie legen die gewünschte Qualität fest und beeinflussen stark die Systemarchitektur. Normen (wie ISO) beschreiben, was Qualitätsmerkmale sind. 
 > Eine **Randbedingung** ist eine Anforderung, die den Lösungsraum jenseits dessen einschränkt, was notwendig ist, um die funktionalen Anforderungen und die Qualitätsanforderungen zu erfüllen. Sie werden nicht umgesetzt und können nicht beeinflusst werden. Sie setzen die Umsetzungsmöglichkeiten ein. Sie können sich auf das betrachtete Sytem und/oder den Entwicklungsprozess beziehen.
 
-## Foliensatz reqeng-le-2 (Bezug auf Praktikum 1)
+## Foliensatz reqeng-le-2
 ### Systemkontext
 
-[!NOTE] Systemkontext 
+> **Systemkontext:**
 > Ist der Teil der Umgebung eines Systems, der für die Definition und das Verständnis der Anforderungen des betrachteten Systems relevant ist.
 > Nicht relevante Anforderungen sollten dennoch dokumentiert sein, um später nachvollziehen zu können, dass diese abgewägt worden.
 
@@ -73,10 +73,10 @@
 
 ### System- & Kontextgrenze
 
-[!NOTE] Systemgrenze
+> **Systemgrenze:**
 > Sie separiert das geplante System von seiner Umgebung. Sie grenzt den im Rahmen des Entwicklungsprozesses gestaltbaren und veränderbaren Teil der Realität von Aspekten in der Umgebung ab, die durch den Entwicklungsprozess nicht verändert werden können.
 
-[!NOTE] Kontextgrenze
+> **Kontextgrenze:**
 > Sie separiert den relevanten Teil der Umgebung eines geplanten Systems vom irrelevanten Teil, d. h. dem Teil der Umgebung, der keinen Einfluss auf das geplante System und damit auch keinen Einfluss auf die Anforderungen dieses Systems hat.
 
 - Grauzonen:
@@ -91,7 +91,7 @@
 ## Foliensatz reqeng-le-4
 ### Anforderungen dokumentieren
 
-[!NOTE] Anforderungsspezifikation *(auch: Anforderungsdokument)*
+> **Anforderungsspezifikation** *(auch: Anforderungsdokument)*
 > Ist eine systematisch dargestellte Sammlung von Anforderungen (typischerweise für ein System oder eine Komponente), die vorgegebenen Kriterien genügt.
 
 ### Gründe für Dokumentation
@@ -215,7 +215,7 @@
 #### Stilregeln 
 ### Satzschablone
 
-[!NOTE] Satzschablone (Requirement Template)
+> **Satzschablone:** (Requirement Template)
 > Ist ein Bauplan für die syntaktische Struktur einer einzelnen Anforderung.
 
 #### Vorteile
@@ -232,7 +232,7 @@
 ## Foliensatz reqeng-le-6
 ### Modelle
 
-[!NOTE] Modell
+> **Modell:**
 > Ist eine abstrakte Darstellung einer existierenden oder einer noch zu schaffenden Realität.
 
 - 3 Ausprägungen von Anforderungen:
@@ -253,7 +253,7 @@
 
 #### Anforderungsmodelle
 
-[!NOTE] Anforderungsmodell
+> **Anforderungsmodell:**
 > Ein konzeptionelles Modell, welches die Anforderungen eines Systems darstellt.
 
 - Vorteile
@@ -286,7 +286,7 @@
     - Bei Fork geht es nur weiter, wenn alle Zweige erfüllt wurden
     - Partitionen / Swimlanes zur Unterscheidung von Verantwortlichkeitsbereichen
 
-    ![](assets/AktivitätsdiagrammPartitionen.png)
+    ![img](../assets/AktivitätsdiagrammPartitionen.png)
 
 - Mehrere Aktivtäten von einem Punkt ausgehend erlaubt
 - eine Prüfung hat mind. 2 Ergebnisse 
@@ -299,4 +299,8 @@
 - kein Start- und Endpunkt
 
 ### Verhaltensdiagramme
-#### UML-Zustandsdiagramme
+#### UML-Zustandsdiagramme (Seite 44 ff && 04_Zustandsdiagramm_Folien)
+- ermöglichen es, die Zustände eines Systems zu verschiedenen Zeitpunkten darzustellen und die Übergänge zwischen diesen Zuständen zu modellieren.
+- Praktische Umsetzung mit Zustandautomaten / Zustandsmaschinen
+- Zustandsautomaten (theoretische Informatik) werden intensive bei der Entwicklung von Compilern eingesetzt
+- Prioritäten von Prüfungen textuell transportieren (Prio 1, Prio 2, ...)
