@@ -302,5 +302,8 @@
 #### UML-Zustandsdiagramme (Seite 44 ff && 04_Zustandsdiagramm_Folien)
 - ermöglichen es, die Zustände eines Systems zu verschiedenen Zeitpunkten darzustellen und die Übergänge zwischen diesen Zuständen zu modellieren.
 - Praktische Umsetzung mit Zustandautomaten / Zustandsmaschinen
+  - entry / "aktivität": Wird beim Eingang in den Zustand ausgeführt
+  - exit / "aktivität": Wird beim Verlassen des Zustands ausgeführt
+  - do / "aktivität": Wird ausgeführt, Parameter sind erlaub
 - Zustandsautomaten (theoretische Informatik) werden intensive bei der Entwicklung von Compilern eingesetzt
 - Prioritäten von Prüfungen textuell transportieren (Prio 1, Prio 2, ...)
