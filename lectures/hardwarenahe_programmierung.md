@@ -4,9 +4,8 @@
 - GitHub "WSL Token": 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
 - Prüfungsvorleistung: 
   1. Pinnball Spiel (https://cpp.homefgr.de/cpp-doc/2026/pv1.html)
-    --> Verteidung am 13.04 oder 20.04 
-    --> Code bis Montag 8:00 Uhr einreichen (freiwillig, kann aber auch direkt live vorgestellt werden)
-  2. noch offen -> wenn erste bestanden, muss diese nicht unbedingt bestanden werden 
+    --> Verteidung am 20.04 --> bestanden
+  2. noch offen 
 
 ---
 
@@ -80,175 +79,209 @@
     - `std::cout` => console out
     - Modulsystem für Imports -> funktioniert noch nicht universell
     - `main()` mit Rückgabetype `int` und ohne `return` gibt automatisch 0 zurück -> Main braucht kein `return`
-    - Begrifflichkeiten:
-        - `std` = Namenspace
-        - `::` = Namespace-Trenner
-        - *Alternative*: `using namespace std`;
-        - `endl` = end line
-        - `<<` = Ausgabe
-        - `#include` = Inkludieren von Header-Dateien
-        - `auto` = Variable
-        - Variable mit `_xxx` = Daten-Member (Member = Datenwert)
-        - Bevor man in den Body des Constructors kommt, werden die Member default initialisiert, um im nächsten Schritt überschrieben zu werden (2x STO)
-            --> zur Vermeidung: `explicit Spielkarte(int wert = 0) : _wert{ wert } {}` -> Wert wird nach Doppelpunkt direkt zugewiesen
-        - `std::addressof` oder auch `&` = Speicheradresse
-        - `explicit` 
-            --> erfordert explizites Aufrufen des Konstruktors
-        - `struct` = Structure Data Type (für einfache Datentypen ohne Members)
-        - `int wert const { return _wert; }`
-            --> `const` sagt dem RAM, dies ist ein Getter
-            --> Memberinitialisierung (Zustand wird nicht verändert)
-            --> Zustand eingefroren und kann nicht verändert werden (anders bei `final` in Java, hier kann via Setter der Wert verändert werden)
-        - `const Spielkarte karte`
-            --> konstante Variable (nur zur Laufzeit) 
-            --> immutable
-            --> Es darf nur lesend darauf zugegriffen werden
-        - `[[nodiscard]]` = Ergebnis nicht wegschmeißen -> Aufruf der Methode ist sinnlos (Compiler weist darauf hin)
-        - `throw std::domain_error{ std::format(...) }` = wir halten uns nicht an Eingabebereiche
-        - Zeichenketten sind Arrays mit terminierender 0 --> `format` verwenden
-        - `void mischen(Spielkarte kartenstapel[150])` 
-            --> 150 = magic number
-            --> Arrays kennen keine Länge (wie size(), length(), sizeof(), ...) --> keine Schleifen möglich (for, foreach, ...)
-            --> Verwendung von Build-in-Arrays nur, wenn wirklich nötig --> möglichst vermeiden
-        - ==Templates sind mächtig==
-        - `std::vector<Spielkarte> kartenstapel` 
-            --> Equivalent der ArrayList in Java
-            --> Nutzung für Sammlung an Datentypen
-            --> enthält keine Karten bei Aufruf von `mischen`--> es läuft kein Constructor Code, kein Default Constructur benötigt
-            --> Vektor kennt keine Länge --> verbraucht zunächst keinen Speicher
-            --> `kartenstapel.emplaceback(wert: 12)` --> man gibt nur Contructorwerte mit --> ruft automatisch Contructor auf und fügt Wert hinten am Array hinzu (forward deklaration)
-                --> *Alternative*: `kartenstapel.pushback(Spielkarte{ 12 })`
-            --> `kartenstapel.at(n:0) = Spielkarte{ wert: 12 }` prüft --> Ist der Wert nicht vorhanden, wird eine Exception geworfen
-        - `std::array<Spielkarte, 150> kartenstapel` > `constexpr int anzahl_karten = 150;` > `mischen(std::array<Spielkarte, anzahl_karten> kartenstapel)`
-            --> Festlegung der Länge des Arrays in der Typendeklaration des Templates, das ist fix
-            --> verhält sich wie Build-in-Array mit der Info der Anzahl der enthaltenen Elemente
-            --> `constexpr` = Binary, zur Laufzeit konstant, wird vom Compilier ausgeführt
-            --> Elemente des übergebenen Objektes werden per Default Contructor konstruiert
-        - Wenn das Array der Methode `mischen` übergeben wird, wird das Original-Array kopiert und die Kopie bearbeitet --> **Call by Value / Call by Copy** (Standard)
-            - Wenn **Call by Reference** benötigt wird, muss dies als dieses ausgewiesen werden mit `&` (`std::addressof()`) am Übergabeparameter 
-                --> `mischen(std::array<Spielkarte, anzahl_karten> &kartenstapel)`
-                --> Wenn dies in der Methodesignatur angegeben wurde, wird dies von der IDE überall als Referenz ausgewiesen 
-                --> In der Methode `mischen` wird die Referenz des Originalobjektes übergeben
-            - *Alternative*: mit `*` (Pointer -> Adresse des Objektes) statt `&`
-                --> `mischen(std::array<Spielkarte, anzahl_karten> *kartenstapel)`
-                --> `(*kartenstapel)[0]` = Dereferenzieren eines Elementes 
-                --> mehr Schreibarbeit
-            - Lokalisierung des `&` ist egal, kann links oder rechts stehen, hauptsache das kaufmännische UND verweist auf Referenz
-        - `std:shuffle(first: kartenstapel.begin(), last: Kartenstapel.end(), &g:gen)` 
-            --> Mischen von Datenmengen
-            --> Begin und Ende der Datenmenge sowie Zufallsgenerator (`&g:gen`) benötigt
-            --> `#include <random>` wird benötigt
-            --> *Alternative*: `std::ranges::shuffle(&r: kartenstapel, &g:gen)` --> range sucht sich selbst Anfang und Ende des übergebenen Objektes
-        - `std::count_if(first: kartenstapel.begin(), last: kartenstapel.end(), pred: [](const auto &karte: const Spielkarte &) { return karte.wert() == -2; }))`
-            --> `pred` = Prädikat = boolscher Wert
-                --> Lamda-Ausdrücke beginnen immer mit `[]` --> Hierin stehen Variablen, die wir ins Lamda übergeben wollen, weil der Body darauf zugreift (capture clause)
-                    --> `pred: [&erwarteter_wert](const auto &karte: const Spielkarte &) { return k... REQUIRE(anzahl == anzahl_spielkarten_pro_kartenwert.at(k: erwarteter_wert)); })` (Skyjo v4 Zeile 139)
-                --> `(const auto &karte: const Spielkarte &)` --> `const` = nur konstande Memberfunktionen können aufgerufen werden --> nur Leserechte
-                --> `{ return karte.wert() == -2; }` --> gibt zurück, ob der Wert -2 ist
-        - auf leere Referenzen prüfen: `nullptr()`
-        - `static constexpr std::map<const int, const unsigned int> initialisiere_map_mit_anzahl_spielkarten_pro_kartenwert() noexcept {...}`
-            --> Variable: `const std::map<const int, const unsigned int> anzahl_spielkarten_pro_kartenwert = initialisiere_map_mit_anzahl_spielkarten_pro_kartenwert();`
-        - `std::map<const int, const unsigned int>anzahl_spielkarten_pro_kartenwert { [0]={-2, 5}, [1]={-1, 10}, [2]={0, 15} }` 
-            --> Einzelnes Map-Element ist vom Typ `std::pair<const int, const unsigned int>`
-        - `const unsigned int` = Integer hat kein Vorzeichen (wie jeder `int` bei Java)
-          - Warum? Zweier-Kompliment --> MARKUS
-        - `anzahl_spielkarten_pro_kartenwert.incert(...)` oder alternativ `anzahl_spielkarten_pro_kartenwert[i] = ...` 
-            --> packt ein `std:pair` in Map --> Typdeduktion
-        - `for( const auto &[ kartenwert: const int, anzahl_spielkarten: const unsigned int ] : anzahl_spielkarten_pro_kartenwert){...}` = Loop der Map (Skyjo 4 Zeile 60)
-            --> "**Structured Binding**" => Zerlegung des Pairs mit `[...]` in Einzelteile, um `pair.first` und `pair.second` zu vermeiden und eine bessere Semantik zu gewährleisten
-            --> Referenz mit `&`, weil Kopien sind aufwändiger als ein Verweis in die Map
-            --> `kartenstapel.end()` = liefert Iterator zurück, der das Ende der Map angibt
-        - `return kartenstapel;`
-            --> Warum wird eine Kopie zurückgegeben?
-            --> `std::vector<Spielkarte> &erstelle_kartenstapel`: `std::vector<Spielkarte>` (lokale Variable ) <== main: `std::vector<Spielkarte> &kartenstapel` == `erstelle_kartenstapel();`
-            --> Lokale Variable sind nach `return` prinzipiell weg -> bedarf lediglich einer CPU die Prozeduren aufrufen kann, kein Garbage Collector (bei Systemsprachen nicht vorhanden) nötig
-            --> Callstack Pointer wird beim Verlassen einer Prozedur auf Ursprungsframe zurückgedreht und Speicher (für Spielkarte) wird freigegeben
-            --> ==Keine Methoden bauen, die eine Referenz zurückgeben !!!==
-            --> Bei Java ist es immer eine Referenz
-        - **Verschiebe-Semantik** = macht Kopieren effizient
-        - `.h` oder`.hpp` = Header-Dateien
-            --> relevante Infos um Softwarekomponente verwenden zu können -> Schnittstellendefinition 
-            --> Compiler braucht Infos wie Objekte aus Datensicht aussehen --> Welche Wert werden in der Methode übergeben?
-            --> `extern const ...` = Daten stehen an anderer Stelle
 
-            
-            ``` C++
-            class C {
-              public:
-                void f(); // Deklaration
-            }
-            ```
+    ``` C++
+    #include <iostream>
+    #include <print>
 
-        - `.cp` oder `.cpp` = Implementierungs-Dateien
-            --> eigentlich Implementierung der Schnittstelle mit voll qualifiertem Methodennamen
-            --> `static` = `private` Prozeduren
-            ---> `#ifndef MEIN_SYMBOL #define MEIN_SYMBOL #endif` oder `#pragma once` --> ==One Definition Rule==
+    // void demo();
 
-            ``` C++
-            void C::f() {...} // Defintiion
-            ```
+    // typedef long mein_size_t;
 
-        - **Präprozessor** läuft vor Compiler, er implementiert alle Abhängigkeiten
-        - `call` macht neuen Callstack auf
-        - Linker füllt Lücken auf
-        - `namespace` (analog zu Packages in Java) ist anonym
-        - 4GB Addressraum
-        - statisches und dynamisches Linken
-          - statisch = Code wird direkt geladen - Nachteil: größer
-          - dynamisch = Code wird on demand geladen
+    int main() {
+        // Klassisches C++:
+        // std::cout << "Hello C++" << std::endl;
+        // std::cout << "Hello C++" << std::endl;
 
+        // std:: Angabe vermeiden
+        // using namespace std::cout;
+        // using namespace std::endl;
+        // cout << "Hello C++" << endl;
+        // std::print("Hello C++\n");
+        // std::println("Hello C++");
 
----
+        // double f = 3.14; // klassisches C++
+        // auto f{3.14}; // universelle Initialisierung
+        // cout << "f=" << f << "\n";
 
-``` C++
-#include <iostream>
-#include <print>
+        demo();
+    }
 
-// void demo();
+    #include <fmt/core.h>
 
-// typedef long mein_size_t;
+    void demo() {
+        int i{42};
+        auto j{i + 10}
 
-int main() {
-    // Klassisches C++:
-    // std::cout << "Hello C++" << std::endl;
-    // std::cout << "Hello C++" << std::endl;
+        std::println("i={}", i);
+        std::println("j={}", j);
 
-    // std:: Angabe vermeiden
-    // using namespace std::cout;
-    // using namespace std::endl;
-    // cout << "Hello C++" << endl;
-    // std::print("Hello C++\n");
-    // std::println("Hello C++");
+        auto hacking = std::addressof(i);
 
-    // double f = 3.14; // klassisches C++
-    // auto f{3.14}; // universelle Initialisierung
-    // cout << "f=" << f << "\n";
+        *(hacking - 1) = 99;
 
-    demo();
+        std::println("i={}", i);
+        std::println("j={}", j);
+
+    }
+    ```
+
+## Begrifflichkeiten (Code-Beispiel: Skyjo)
+- `std` = Namenspace
+- `::` = Namespace-Trenner
+- *Alternative*: `using namespace std`;
+- `endl` = end line
+- `<<` = Ausgabe
+- `#include` = Inkludieren von Header-Dateien
+- `auto` = Variable
+- Variable mit `_xxx` = Daten-Member (Member = Datenwert)
+- Bevor man in den Body des Constructors kommt, werden die Member default initialisiert, um im nächsten Schritt überschrieben zu werden (2x STO)
+    --> zur Vermeidung: `explicit Spielkarte(int wert = 0) : _wert{ wert } {}` -> Wert wird nach Doppelpunkt direkt zugewiesen
+- `std::addressof` oder auch `&` = Speicheradresse
+- `explicit` 
+    --> erfordert explizites Aufrufen des Konstruktors
+- `struct` = Structure Data Type (für einfache Datentypen ohne Members)
+- `int wert const { return _wert; }`
+    --> `const` sagt dem RAM, dies ist ein Getter
+    --> Memberinitialisierung (Zustand wird nicht verändert)
+    --> Zustand eingefroren und kann nicht verändert werden (anders bei `final` in Java, hier kann via Setter der Wert verändert werden)
+- `const Spielkarte karte`
+    --> konstante Variable (nur zur Laufzeit) 
+    --> immutable
+    --> Es darf nur lesend darauf zugegriffen werden
+- `[[nodiscard]]` = Ergebnis nicht wegschmeißen -> Aufruf der Methode ist sinnlos (Compiler weist darauf hin)
+- `throw std::domain_error{ std::format(...) }` = wir halten uns nicht an Eingabebereiche
+- Zeichenketten sind Arrays mit terminierender 0 --> `format` verwenden
+- `void mischen(Spielkarte kartenstapel[150])` 
+    --> 150 = magic number
+    --> Arrays kennen keine Länge (wie size(), length(), sizeof(), ...) --> keine Schleifen möglich (for, foreach, ...)
+    --> Verwendung von Build-in-Arrays nur, wenn wirklich nötig --> möglichst vermeiden
+- ==Templates sind mächtig==
+- `std::vector<Spielkarte> kartenstapel` 
+    --> Equivalent der ArrayList in Java
+    --> Nutzung für Sammlung an Datentypen
+    --> enthält keine Karten bei Aufruf von `mischen`--> es läuft kein Constructor Code, kein Default Constructur benötigt
+    --> Vektor kennt keine Länge --> verbraucht zunächst keinen Speicher
+    --> `kartenstapel.emplaceback(wert: 12)` --> man gibt nur Contructorwerte mit --> ruft automatisch Contructor auf und fügt Wert hinten am Array hinzu (forward deklaration)
+        --> *Alternative*: `kartenstapel.pushback(Spielkarte{ 12 })`
+    --> `kartenstapel.at(n:0) = Spielkarte{ wert: 12 }` prüft --> Ist der Wert nicht vorhanden, wird eine Exception geworfen
+- `std::array<Spielkarte, 150> kartenstapel` > `constexpr int anzahl_karten = 150;` > `mischen(std::array<Spielkarte, anzahl_karten> kartenstapel)`
+    --> Festlegung der Länge des Arrays in der Typendeklaration des Templates, das ist fix
+    --> verhält sich wie Build-in-Array mit der Info der Anzahl der enthaltenen Elemente
+    --> `constexpr` = Binary, zur Laufzeit konstant, wird vom Compilier ausgeführt
+    --> Elemente des übergebenen Objektes werden per Default Contructor konstruiert
+- Wenn das Array der Methode `mischen` übergeben wird, wird das Original-Array kopiert und die Kopie bearbeitet --> **Call by Value / Call by Copy** (Standard)
+    - Wenn **Call by Reference** benötigt wird, muss dies als dieses ausgewiesen werden mit `&` (`std::addressof()`) am Übergabeparameter 
+        --> `mischen(std::array<Spielkarte, anzahl_karten> &kartenstapel)`
+        --> Wenn dies in der Methodesignatur angegeben wurde, wird dies von der IDE überall als Referenz ausgewiesen 
+        --> In der Methode `mischen` wird die Referenz des Originalobjektes übergeben
+    - *Alternative*: mit `*` (Pointer -> Adresse des Objektes) statt `&`
+        --> `mischen(std::array<Spielkarte, anzahl_karten> *kartenstapel)`
+        --> `(*kartenstapel)[0]` = Dereferenzieren eines Elementes 
+        --> mehr Schreibarbeit
+    - Lokalisierung des `&` ist egal, kann links oder rechts stehen, hauptsache das kaufmännische UND verweist auf Referenz
+- `std:shuffle(first: kartenstapel.begin(), last: Kartenstapel.end(), &g:gen)` 
+    --> Mischen von Datenmengen
+    --> Begin und Ende der Datenmenge sowie Zufallsgenerator (`&g:gen`) benötigt
+    --> `#include <random>` wird benötigt
+    --> *Alternative*: `std::ranges::shuffle(&r: kartenstapel, &g:gen)` --> range sucht sich selbst Anfang und Ende des übergebenen Objektes
+- `std::count_if(first: kartenstapel.begin(), last: kartenstapel.end(), pred: [](const auto &karte: const Spielkarte &) { return karte.wert() == -2; }))`
+    --> `pred` = Prädikat = boolscher Wert
+        --> Lamda-Ausdrücke beginnen immer mit `[]` --> Hierin stehen Variablen, die wir ins Lamda übergeben wollen, weil der Body darauf zugreift (capture clause)
+            --> `pred: [&erwarteter_wert](const auto &karte: const Spielkarte &) { return k... REQUIRE(anzahl == anzahl_spielkarten_pro_kartenwert.at(k: erwarteter_wert)); })` (Skyjo v4 Zeile 139)
+        --> `(const auto &karte: const Spielkarte &)` --> `const` = nur konstande Memberfunktionen können aufgerufen werden --> nur Leserechte
+        --> `{ return karte.wert() == -2; }` --> gibt zurück, ob der Wert -2 ist
+- auf leere Referenzen prüfen: `nullptr()`
+- `static constexpr std::map<const int, const unsigned int> initialisiere_map_mit_anzahl_spielkarten_pro_kartenwert() noexcept {...}`
+    --> Variable: `const std::map<const int, const unsigned int> anzahl_spielkarten_pro_kartenwert = initialisiere_map_mit_anzahl_spielkarten_pro_kartenwert();`
+- `std::map<const int, const unsigned int>anzahl_spielkarten_pro_kartenwert { [0]={-2, 5}, [1]={-1, 10}, [2]={0, 15} }` 
+    --> Einzelnes Map-Element ist vom Typ `std::pair<const int, const unsigned int>`
+- `const unsigned int` = Integer hat kein Vorzeichen (wie jeder `int` bei Java)
+    - Warum? Zweier-Kompliment --> MARKUS
+- `anzahl_spielkarten_pro_kartenwert.incert(...)` oder alternativ `anzahl_spielkarten_pro_kartenwert[i] = ...` 
+    --> packt ein `std:pair` in Map --> Typdeduktion
+- `for( const auto &[ kartenwert: const int, anzahl_spielkarten: const unsigned int ] : anzahl_spielkarten_pro_kartenwert){...}` = Loop der Map (Skyjo 4 Zeile 60)
+    --> "**Structured Binding**" => Zerlegung des Pairs mit `[...]` in Einzelteile, um `pair.first` und `pair.second` zu vermeiden und eine bessere Semantik zu gewährleisten
+    --> Referenz mit `&`, weil Kopien sind aufwändiger als ein Verweis in die Map
+    --> `kartenstapel.end()` = liefert Iterator zurück, der das Ende der Map angibt
+- `return kartenstapel;`
+    --> Warum wird eine Kopie zurückgegeben?
+    --> `std::vector<Spielkarte> &erstelle_kartenstapel`: `std::vector<Spielkarte>` (lokale Variable ) <== main: `std::vector<Spielkarte> &kartenstapel` == `erstelle_kartenstapel();`
+    --> Lokale Variable sind nach `return` prinzipiell weg -> bedarf lediglich einer CPU die Prozeduren aufrufen kann, kein Garbage Collector (bei Systemsprachen nicht vorhanden) nötig
+    --> Callstack Pointer wird beim Verlassen einer Prozedur auf Ursprungsframe zurückgedreht und Speicher (für Spielkarte) wird freigegeben
+    --> ==Keine Methoden bauen, die eine Referenz zurückgeben !!!==
+    --> Bei Java ist es immer eine Referenz
+- **Verschiebe-Semantik** = macht Kopieren effizient
+- `.h` oder`.hpp` = Header-Dateien
+    --> relevante Infos um Softwarekomponente verwenden zu können -> Schnittstellendefinition 
+    --> Compiler braucht Infos wie Objekte aus Datensicht aussehen --> Welche Wert werden in der Methode übergeben?
+    --> `extern const ...` = Daten stehen an anderer Stelle
+
+    ``` C++
+    class C {
+        public:
+        void f(); // Deklaration
+    }
+    ```
+
+- `.cp` oder `.cpp` = Implementierungs-Dateien
+    --> eigentlich Implementierung der Schnittstelle mit voll qualifiertem Methodennamen
+    --> `static` = `private` Prozeduren
+    ---> `#ifndef MEIN_SYMBOL #define MEIN_SYMBOL #endif` oder `#pragma once` --> ==One Definition Rule==
+
+    ``` C++
+    void C::f() {...} // Defintiion
+    ```
+
+- **Präprozessor** läuft vor Compiler, er implementiert alle Abhängigkeiten
+- `call` macht neuen Callstack auf
+- Linker füllt Lücken auf
+- `namespace` (analog zu Packages in Java) ist anonym
+- 4GB Addressraum
+- statisches und dynamisches Linken
+    - statisch = Code wird direkt geladen - Nachteil: größer
+    - dynamisch = Code wird on demand geladen
+
+## Dynamische Speicherverwaltung
+- Beispiel: Inventar-Inhalt soll im Raum abgelegt werden, wenn Spieler stirbt. Container sind nicht erlaubt.
+- `Item[] inventory = player.inventory();` geht nicht, weil Größe des Arrays zur Kompilierzeit bekannt sein muss
+    - ging es, läge das Array im Callstack (-> lokale Variable)
+
+    > **Callstack** = automatischer Speicher, der wiederverwendet wird und automatisch freigegeben wird
+    > RAM-speicher im Datensegment, organisiert in Frames, jeder Frame steht für einen Prozeduraufruf, für die hier alle Variablen/Registerinhalte/etc. gespeichert wird
+    > Heap und Callstacken wachsen aufeinander zu um sich so lang wie mögich nicht im Weg zu sein
+    > Methoden zur Anreichung `push()` und Verringerung `pop()`
+    > Rückrufaddresse für Prozeduren wird chronologisch immer in den ToS (Top of Stack) abgelegt > Speicher wird freigegeben, wenn eine Prozedur fertig ist > Speicher kann wiederverwendet werden (siehe Code-Beispiel)
+    > Deshalb macht es keinen Sinn, eine Referenz auf lokale Variablen zurückzugeben
+
+```C++
+// Am Anfang und am Ende ist Callstack leer
+
+prozedur_1 () {
+    prozedur_2(); // Callstack 1. und 5. ToS
 }
-
-#include <fmt/core.h>
-
-void demo() {
-    int i{42};
-    auto j{i + 10}
-
-    std::println("i={}", i);
-    std::println("j={}", j);
-
-    auto hacking = std::addressof(i);
-
-    *(hacking - 1) = 99;
-
-    std::println("i={}", i);
-    std::println("j={}", j);
-
+prozedur_2 () {
+    prozedur_3(); // Callstack 2. und 4. ToS
+}
+prozedur_3 () {
+    ... // Callstack 3. ToS
 }
 ```
 
+- Speicherkonflikte, wenn Callstack zu groß wird, können schwierig entdeckt werden (ausgewachsene Betriebssysteme können das), daher eigene Speicherverwaltung nötig
+- Compiler berechnet Werte für Callstack-Frame, indem er lokale Variablen mit `size()` aufruft -> Der Wert landet dann im Assembler Code
+- viel Programmiersprachen erlauben keine dynmaische Arrays (dynamische Länge) zur Compilzeit > ==lokalen Variablen müssen zur Compilezeit bestimmbar sein > im Callstack können nur Konstanten stehen==
+- Array mit fixer Länge = Speicherverschwendung > nicht empfohlen
+- Array kann im Heap abgelegt werden, dieser hat dynamischer Speicher
+    - In Java erhält man dynamischen Speicher über new Ball()
+        1. Alloziere (Reserviere) `sizeof(Ball)` Byte Heap-Speicher > lebt so lang bis es nicht mehr verwendet wird
+
+
+- `Item[player.inventory().size()] inventory`
+
 ---
 
-## Praktikum 1
+## PV1 Konzept (Prozedual)
 - struct mit Konfigurationsdaten (GameConfig):
   - Spielfeld:
     - Breite (pf_width)
@@ -330,3 +363,126 @@ void demo() {
 
 - Funktion zur Änderung der Richtung (CalculateDirections)
 - Funktion zur Änderung der Position (CalculatePositions)
+
+### Ansätz aus der Code Review
+- in C haben structs keine Memberfunktion, sind nur Funktionsdaten
+- struct = alle Datenmember sind public > Geheimhaltungsprinzip aufgelöst > mit Constructor könnte man Datenmember auf private stellen
+
+```C++
+struct Ball {...}
+
+class Ball {
+    public:
+    int pos_x;
+    int pos_y;
+    float velocity;
+
+    Ball (int x, int y, float velocity) {...} // Default-Werte mitgeben > mit int x = 0
+}
+
+void init_ball(Ball &b, int x, int y, float vel) {// Alternative zum Constructor
+    if(x ...) b.pos_x = x
+}
+
+void create_ball(int x, int y, float vel) {
+    Ball b {.pos_x = x, ...}
+    return b;
+}
+
+void main() {
+    // Ball b {100, 50, 42.0f}
+
+    Ball b; // Ball mit Default-Werten initialisiert
+    b.pos_x = 100;
+    b.pos_y = 50;
+    b.velocity = 0.0f;
+
+    init_ball(b, 100, 50, 42.0f); // Alternative zum Constructor
+
+    Ball b2 = create_ball(200, 100, 23.0f) // Kopie, keine Referenz, weil lokale Variable auf Callstack liegt, nach Aufruf ist die Varible weg
+}
+```
+
+- Wie sollte ein Getter gestaltet werden?
+    - Referenz = Backdoor/Einfallstoor in SPielerstruktur, jeder Code kann Spielkarten verändern
+    - Wenn Kopie zurückgegeben wird, dann neue Kopie
+    - High Frenquency Trading: Keine Kopien, Referenzen benötigt > konstante Referenz (const &)
+    - Alternativen:
+        - Methode für Abfrage von Anzahl an Spielkarten
+        - `using` für Typ Alias, hinter dem sich etwas "versteckt", um Zugriffe zu erleichtern
+- Sonstige Anmerkungen:
+    - ==Empfehlung: Nutzung von Standard-Bibliotheks-Methoden bevorzugen > Compiler versteht die Algorithmen und kann besser optimieren==
+    - Operator um Wert nach rechts zu verschieben
+    - Bei Java wird empfohlen Optional zu nutzen
+    - `null` = bezieht sich auf Referenzdatentypen -> keine Speicheraddresse
+
+    ``` C++
+    int i;
+    std::cin >> i; // console in (input stream), i wird eingelesen
+    std::optional<char> read_character (std::istream &in) { // beinhaltet Character oder ist leer (Schrödingers Container), Char ist kein Referenzdatentyp, daher kann kein null zurückgegeben werden
+        char result{};
+        if(in >> result) { // etwas wird in result eingelesen
+            return result;
+        }
+    in.clear // leeren
+    in.ignore(std::numeric_limits<...>)
+    return; //Auslieferung leeres Optional
+    }
+    ```
+
+---
+
+## Call by Reference
+
+``` Mermaid
+flowchart LR
+    %% RAM Container
+    subgraph RAM
+        direction TB
+
+        %% mischen Stack Frame (Referenz)
+        subgraph mischen
+            direction TB
+            ref["Referenz auf std::array(Spielkarte,5)\n\naddressof(karten) = 0x7ffffffc5b20"]
+        end
+
+        %% main Stack Frame (Original)
+        subgraph main
+            direction TB
+            arr["std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5b20"]
+        end
+    end
+
+    %% Reference Arrow
+    ref -->|zeigt auf gleiche Adresse| arr
+```
+
+## Call by Value
+
+```Mermaid
+flowchart LR
+    %% RAM Container
+    subgraph RAM
+        direction TB
+
+        %% mischen Stack Frame (Kopie)
+        subgraph mischen
+            direction TB
+            copy["Kopie von std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5a00"]
+        end
+
+        %% main Stack Frame (Original)
+        subgraph main
+            direction TB
+            arr["std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5b20"]
+        end
+    end
+
+    %% Copy Arrow
+    arr -->|Kopie wird übergeben| copy
+```
+
+---
+
+## PV2
+### Feautures
