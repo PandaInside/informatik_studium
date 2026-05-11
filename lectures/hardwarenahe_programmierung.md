@@ -242,9 +242,59 @@
     - statisch = Code wird direkt geladen - Nachteil: größer
     - dynamisch = Code wird on demand geladen
 
-## Dynamische Speicherverwaltung
+### Call by Reference
+
+``` Mermaid
+flowchart LR
+    %% RAM Container
+    subgraph RAM
+        direction TB
+
+        %% mischen Stack Frame (Referenz)
+        subgraph mischen
+            direction TB
+            ref["Referenz auf std::array(Spielkarte,5)\n\naddressof(karten) = 0x7ffffffc5b20"]
+        end
+
+        %% main Stack Frame (Original)
+        subgraph main
+            direction TB
+            arr["std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5b20"]
+        end
+    end
+
+    %% Reference Arrow
+    ref -->|zeigt auf gleiche Adresse| arr
+```
+
+### Call by Value
+
+```Mermaid
+flowchart LR
+    %% RAM Container
+    subgraph RAM
+        direction TB
+
+        %% mischen Stack Frame (Kopie)
+        subgraph mischen
+            direction TB
+            copy["Kopie von std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5a00"]
+        end
+
+        %% main Stack Frame (Original)
+        subgraph main
+            direction TB
+            arr["std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5b20"]
+        end
+    end
+
+    %% Copy Arrow
+    arr -->|Kopie wird übergeben| copy
+```
+
+## Dynamische Speicherverwaltung (Website > C++ Grundlagen)
 - Beispiel: Inventar-Inhalt soll im Raum abgelegt werden, wenn Spieler stirbt. Container sind nicht erlaubt.
-- `Item[] inventory = player.inventory();` geht nicht, weil Größe des Arrays zur Kompilierzeit bekannt sein muss
+- `Item inventory[] = player.inventory();` geht nicht, weil Größe des Arrays zur Kompilierzeit bekannt sein muss
     - ging es, läge das Array im Callstack (-> lokale Variable)
 
     > **Callstack** = automatischer Speicher, der wiederverwendet wird und automatisch freigegeben wird
@@ -275,9 +325,107 @@ prozedur_3 () {
 - Array kann im Heap abgelegt werden, dieser hat dynamischer Speicher
     - In Java erhält man dynamischen Speicher über new Ball()
         1. Alloziere (Reserviere) `sizeof(Ball)` Byte Heap-Speicher > lebt so lang bis es nicht mehr verwendet wird
+- Warum reicht der Call Stack nicht aus?
+    - es muss zur Compilezeit bekannt sein wie groß der Call Stack Frame ist
+    - wie wird es berechnet?
+        - Methodensignatur, Übergabewerte, lokale Variablen, Rückgabewerte/-addresse, CPU Register müssen vorher schon klar sein
+    - wir müssen zur Compilezeit wissen, aus was Objekte bestehen
+    - Call Stack Speicher kann nicht dynamisch sein
+- Vorteile vom Callstack (= automatischer Speicher)
+    - lokale Variablen werden automatisch aufgeräumt
+    - Laufzeit-Komplexität von 1 (Hinzufügen/Abziehen)
+- Heap = dynamische Speicherverwaltung
+- `Item inventory[player.inventory().size()] = player.inventory()`
+- `drop_inventory(inventory,  player.current_room());`
 
+[Nacharbeiten]
 
-- `Item[player.inventory().size()] inventory`
+### Heap
+- Heap für einen gesamten Prozess (= sich in Ausführung befindliches Programm)
+    - mind. 1 Thread, alle Threads teilen sich einen Heap
+    - pro Thread 1 Call Stack, weil jeder Thread seinen eigenen Aufruf macht
+- Lebenszeit von Thing t ist auf Call Stack Frame beschränkt:
+    - 1. Beispiel: main: t lebt länger als jedes andere Objekt
+    - 2. Beispiel: grün wird zuerst gelöscht, wenn das Objekt hier instanziiert wird, ist die Basis der Referenz weg
+- main wartet (join) auf Ende von Thread 2:
+    - 1. Beispiel: Thread 1 lebt länger als Thread 2
+    - 2. Beispiel: Thread 2 könnte Lebenszeit des Thread 1 überdauern
+- Eigenschaften:
+    - Lebensdauer bis Speicher freigemacht wird - Verweise/Referenzen nur auf tiefere Objekte
+    - Speicherobjekte können zu belieber Zeit in beliebigen Größen angelegt werden - Verantwortung für Speicher liegt beim Entwickler
+    - Wenn SPeicher nicht ordentlich aufgeräumt wird, können Speicherlöcher entstehen
+    - Speicher auf dem Heap allozieren: `new Thing{}`
+        1. alloziere sizeof(Thing) zusammenhängender Byte-Heap-Speicher, falls Speicher nicht vorhanden werfe Exception (`std::bad_alloc`)
+        2. default-initialisiere neue Thing-Instanz durch Default-Konstruktor
+        3. (liefere Zeiger auf (Anfang der) Instanz zurück)
+        - geht auch mit anderen Datentypen: int, floats, chars, ...
+    - Lebenszeit von Heap-Speicherobjekten: beliebig lang, manuell steuerbar (max. bis Ende des Prozesses) -> Großer Unterschied zu Managed Languges (mit Garbage Collector)
+    - Speicher auf dem Heap aufräumen: `delete` 
+- `new` gitb Zeiger zurück, daher `Thing *pt = new Thing{};`
+    - Größe des Objektes im Heap Speicher: `sizeof(Thing)`
+    - Thing Pointer liegt im Callstack, weil er eine lokale Variable ist
+    - Wert des Thing Pointers ist die Adresse des Things im Heap Speicher
+- Bei Arrays:
+
+    ```C++
+    size_t n = ...;// size_t größter Wert den die Hardware Archtitektur fassen kann
+    Thing *pt = new Thing[n];
+    ```
+
+    - Größe des Arrays im Heap Speicher: `n * sizeof(Thing)` (mehrere Objekte von `sizeof(Thing)` untereinander)
+    - **Pointer decay** = Information, dass es ein Array ist, verblasst
+    - Bei Löschen-Aufruf, löschen wir nur das erste Element -> es sieht aus als wäre alles frei, was nicht der Fall ist
+    - Beispiel:
+        ```C++
+        void f() {
+            Thing *tp = new Thing{}; // Raw Pointer, drücken keinen Besitz aus, nur Besitzer kann delete ausführen, Compiler kann nicht wissen dass Speicher gelöscht werden darf
+            foobar_might_throw(); // vorzeitiges return? Verlieren Referenz auf den Pointer -> Speicherloch
+            if(...) return; // bedingtes return -> verlieren Referenz auf den Pointer -> Speicherloch
+            delete tp;
+        }
+        ```
+- Bei primitiven Datentypen:
+
+    ``` C++
+    int *pi = new int{}; // {} gibt Defaultwert 0, sonst undefined behaviour
+    int i = *pi;
+    *pi = 42; // * dereferenziert, sodass SPeicheradresse nicht mit 42 überschrieben wird
+    std::print(*pi);
+    ```
+
+    - Verwendung des Dereferenzierungsoperators um mithilfe von Zeiger auf `int` auf den eigentlichen `int` zugreifen 
+**- Manuelle Freigabe von dynamischen Speicher:**
+    - `delete` Operator ruft Destruktor der Instanz auf
+    ``` C++
+    Thing *pt = new Thing{};
+    delete pt;
+    ```
+    - wenn man die Variable nach einem `delte` nochmal nutzen will, gibt Laufzeitfehler -> **undefined behaviour**
+    - um Laufzeitfehler zu vermeiden setzt man die Variable nach einem `delete` auf `nullptr`
+    - man muss sich merken dass man Array-New aufgerufen hat, um das mit `delete[]` freizugeben, gibt jedes Objekt im Array frei -> daher solche Arrays eher vermeiden
+- **Speicherlöcher:**
+    - entstehen bei Heap-alloziertem Speicher, wenn dieser nie mit delete freigegeben wird und die Methode mit der lokalen Varible beendet ist
+    - **use after free:** lokale Variable weg, aber Speicher noch da -> siehe obenstehendes Beispiel
+    - können durch **Smart Pointer** vermieden werden
+    - Warum ist eine manuelle Freigabe nötig?
+        - `Thing *tp = new Thing{};` -> Raw Pointer, drücken keinen Besitz aus, aber nur Besitzer kann delete ausführen, Compiler kann nicht wissen dass Speicher gelöscht werden darf
+- **Smart Pointer:**
+    - Beim Verlassen des Gültigkeitsbereichs der Variable, wird Destruktor aufgerufen und lokale Varibale zerstört
+- **Destruktor:**
+    - Wenn Konstruktor `C` heißt, dann heißt Destruktor `~C`
+    - C++ garantiert, dass der Destruktor am Ende des Gültigkeitsbereichs aufgerufen wird, 
+        - auch bei allen Elementen -> Turtles all the way down
+        - egal wie die Methode beendet wird (normal, exception, innerhalb namespace) 
+        - wenn das Programm sauber beendet wird
+    - Da der Compiler bei Raw Pointern nicht erkennen kann, ob er diesen löschen darf, daher funktioniert das hier nicht 
+    - primitive Datentypen haben keinen Destruktor
+- **Resource Acquisition is Initialization (RAII):**
+    - Smart Pointer = übernehmen Verantwortung für eine Ressource (z.B. Heap Speicher)
+
+### Polymorphismus
+- 
+
+## Templates
 
 ---
 
@@ -364,7 +512,13 @@ prozedur_3 () {
 - Funktion zur Änderung der Richtung (CalculateDirections)
 - Funktion zur Änderung der Position (CalculatePositions)
 
-### Ansätz aus der Code Review
+### Feedback Code Review PV1
+- Auf Schleifen mit `for` verzichten und lieber Methoden der Standard-Bibliothek wie `range()` nutzen
+- `&` ist das freundliche `*`, beides ist eine Referenz
+    - `***` als Referenz einer Referenz einer Referenz ist ein veralteter Denkansatz und unsauber
+- `&` vor einer Variablen (bei einem Datentyp) ist eine Referenz und steht für `addressof()`
+
+### Allgemeine Ansätz aus der Code Review (Objektorientierte Abgaben)
 - in C haben structs keine Memberfunktion, sind nur Funktionsdaten
 - struct = alle Datenmember sind public > Geheimhaltungsprinzip aufgelöst > mit Constructor könnte man Datenmember auf private stellen
 
@@ -432,57 +586,22 @@ void main() {
 
 ---
 
-## Call by Reference
-
-``` Mermaid
-flowchart LR
-    %% RAM Container
-    subgraph RAM
-        direction TB
-
-        %% mischen Stack Frame (Referenz)
-        subgraph mischen
-            direction TB
-            ref["Referenz auf std::array(Spielkarte,5)\n\naddressof(karten) = 0x7ffffffc5b20"]
-        end
-
-        %% main Stack Frame (Original)
-        subgraph main
-            direction TB
-            arr["std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5b20"]
-        end
-    end
-
-    %% Reference Arrow
-    ref -->|zeigt auf gleiche Adresse| arr
-```
-
-## Call by Value
-
-```Mermaid
-flowchart LR
-    %% RAM Container
-    subgraph RAM
-        direction TB
-
-        %% mischen Stack Frame (Kopie)
-        subgraph mischen
-            direction TB
-            copy["Kopie von std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5a00"]
-        end
-
-        %% main Stack Frame (Original)
-        subgraph main
-            direction TB
-            arr["std::array(Spielkarte,5)\n\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n[Spielkarte]\n\naddressof(karten) = 0x7ffffffc5b20"]
-        end
-    end
-
-    %% Copy Arrow
-    arr -->|Kopie wird übergeben| copy
-```
-
----
-
 ## PV2
 ### Feautures
+- Netzwerkkommunikation, falls benötigt
+    - open socket, read, write, close - posix bibliothek
+    - unix sockets
+    - c-api wrappen
+- Konzept:
+    - main -> Einstiegs- und Ausstiegspunkt
+    - class App
+        - verbindet alles
+        - initialisiere Console, um Eingabe zu verarbeiten (`handleInput()`)
+    - class Console
+        - initialisiere CommandParser, um erstes Eingabewort zu verarbeiten
+    - class CommandParser
+        - Methode execute() je nach Eingabe
+        - initialisiere DataBase API, um Daten mit CRUD Methoden zu verarbeiten
+    - class Database API -> CRUD Methoden
+
+!!! switch -> siehe shapes 4 a
