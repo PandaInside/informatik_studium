@@ -307,3 +307,209 @@
   - do / "aktivität": Wird ausgeführt, Parameter sind erlaub
 - Zustandsautomaten (theoretische Informatik) werden intensive bei der Entwicklung von Compilern eingesetzt
 - Prioritäten von Prüfungen textuell transportieren (Prio 1, Prio 2, ...)
+
+## Foliensatz reqeng-le-3
+### Anforderungen ermitteln
+> aufarbeiten
+
+## Foliensatz reqeng-le-7
+### Anforderungen prüfen (Review)
+#### Inhalt prüfen
+- Verfolgbarkeitn
+  - Woher kommt die Anforderung? Wo führt sie hin?
+- Korrektheit
+  - fachliche Richtigkeit
+  - Übereinstimmung mit tatsächlichen Bedürfnissen des Stakeholders
+- Konsistenz
+  - keine Wiedersprüche
+- Lösungsneutralität
+  - nicht zu technisch (keine festgelegte Datenbank)
+- Überprüfbarkeit
+  - "Das System soll schnell antworten" -> keine spezifische Wertangaben
+- Notwendigkeit
+  - keine Nice-to-have
+  - gute Begründung vorlegen
+- Vollständigkeit
+  - "Das System soll den Kunden benachrichten" -> unvollständig
+
+#### Dokumentation prüfen
+- Konformität zur Dokumentenstruktur / zum Dokumentationsformat / mit Dokumentationsregeln
+  - Schablonen verwenden
+  - festes geregeltes Format nutzen
+- Eindeutigkeit
+- Verständlichkeit
+
+#### Abgestimmtheit prüfen
+- Abstimmung
+  - transparent
+  - kann gern nach Rollen gewichtet werden
+- Abstimmung nach Änderungen
+- Konflikte aufgelöst
+
+#### Prinzipien
+- Prinzip 1
+- Prinzip 2
+- Prinzip 3
+- Prinzip 4
+- Prinzip 5
+  - Pilotsysteme zur Machbarkeitsprüfung der Anforderung
+  - Vermindert das Risiko, dass Anforderungen nicht umsetzbar sind
+  - Grenzen festlegen oder feststellen (Hosting, etc.)
+- Prinzip 6
+  - nicht zu viel verlangen, Prüfung ist statisch (Momentaufnahme), Anforderungen können sich ändern
+  - Empfehlung: spätere Prüfung oder wiederholte Prüfung zu späterem Zeitpunkt
+  - Wann?
+    - viele neue Anforderungen, die das Gesamtsystem um echt Funktionalitäten erweitert
+    - neues Wissen durch fortlaufendes RE
+    - längerfristige Projekte
+    - unbekannte Domäne
+
+
+#### Techniken zur Prüfung von Anforderungen
+- Stellungnahme
+- Walthrough
+- Inspektion
+
+### Anforderungen abstimmen
+
+## Foliensatz reqeng-le-8
+### Anforderungen verwalten (optional Zusatzfolien)
+- Attributtyp: -> Seite 11
+  - Stabilität = erwartete Änderungswahrscheinlichkeit
+  - Kritikalität = Schaden und Eintrittswahrscheinlichkeit
+  - Priorität = Wichtigkeit bezogen auf ein definiertes Priorisierungsmerkmal
+    - **Wichtig:** Priorität braucht einen Bezug, z.B. Markskzeptanz, Umsetzungsreihenfolge, Opportunitätskosten
+- weitere Attributionstypen:
+  - Aufwand
+  - Status Inhalt
+  - Status bzgl. Einigung
+  - Juristische Verbindlichkeit
+  - Status bzgl. der Überprüfung (z.B. Review)
+  - Release
+- **Nutzen:** Anforderungen werden nicht nur fahclich sondern auch organisatorisch strukturiert
+ 
+ #### Modellbasierte Attibutierung
+ - Anforderungen werden nach einem vorher festgelegten Modell mit Attributen versehen
+ - Modell legt fest:
+  - welche Anforderunstypen gibt es 
+  - welche Attribute je Typ erlaubt oder verpflichtend sind
+  - welche Werte erlaubt sind
+  - welche Beziheungen zu anderen Artefakten erlaubt sind
+- einfaches Anforderungsmodell:
+  - Anforderung = hat ID, Name, Beschreibung, Status, Quelle
+  - Funktionale Anforderung = hat zusätzliche Priorität, Release, Verantwortlichen
+  - Qualitätsanforderung = hat zusätzlich Messkriterium, Akzeptanzwert
+  - Status = Review, in Bearbeitung, etc...
+- Priorisierungstechnik
+
+#### Sichten auf Anforderungen (S. 15 ff.)
+#### Priorisierung von Anforderungen (S. 21 ff.)
+- Wiegers'sche Priorisierungsmatrix
+  - Anforderungen, relativer Nutzen, relativer Nachteil
+  - aus Nutzen und Nachteil entstehen relative Kosten
+    - z.B. indem ich für jede Anforderung den Nutzen mit 2 und den Nachteil mit 1 gewichte
+    - Werte werden kumuliert -> Gesamtzahl entspricht 100% -> prozentualer Wert für jede Anforderung kann errechnet werden
+  - Relative Kosten und relatives Risiko selbst festlegen
+
+#### Verfolgbarkeit von Anforderungen (S. 30 ff.)
+#### Versionierung von Anforderungen (S.40 ff.)
+#### Verwaltung von Anforderungsänderungen
+
+## Foliensatz reqeng-le-9
+### Werkzeugunterstützung
+
+## Foliensatz reqeng-akzeptanzkriterien
+### Akzeptanzkriterien
+- Anforderungen beschreiben, was ein System leisten soll.
+- Akzeptanzkriterien beschreiben, woran erkennbar ist, dass eine Anforderung erfüllt ist.
+- Sie helfen dabei:
+  - vage Aussagen zu präzisieren
+  - ein gemeinsames Verständnis herzustellen
+  - Entwicklung und Test zu orientieren
+  - kann fachliche Akzeptanz nachvollziehbar machen
+
+- Akzeptanz ist nicht dasselbe wie Prübarkeit
+- Akzeptanz bedeutet
+  - Eine Anforderung oder Lösung wird fachlich als erfüllt angenommen.
+- Prübarkeit bedeutet:
+  - Es kann objektiv festgestellt werden, ob eine Bedingung erfüllt ist. 
+
+- Ein Akzeptanzkriterium legt fest, unter welchen Bedingungen eine Anforderung als erfüllt gilt
+- gute Akzeptanzkriterien:
+  - eindeutig
+  - beobachtbar oder messbar (für Nutzergruppe, konkrete Informationen aggregieren)
+  - realistisch
+  - fachlich relevant
+  - testbar
+- **Ein Akzeptanzkriterium ersetzt die Anforderung nicht, sondern macht sie überprüfbar.**
+
+- 2 unterschiedliche Prükriterien:
+  - **Validierung**: Ist die richtige Lösung beschrieben?
+  - **Verifikation**: Ist die beschriebene Lösung korrek realisiert?
+- **Akzeptanzkriterien verbindlichen fachliche Erwartungen und spätere Prüfung.**
+
+- Ohne Akzeptanzkriterium bleiben Anforderungen oft interpretationsanfällig.
+- Beispiel 1:
+  - Anforderung: "Das System soll benutzerfreundlich sein"
+  - Problem:
+    - Was soll benutzerfreundlich bedeuten?
+    - Für welche Bentuzergruppe?
+    - In welcher Situation?
+    - Woran wird Erfolg erkannt?
+- Beispiel 2:
+  - Anforderung: "Das System soll es dem Kunden erleichtern, gewünschte Musik zu finden."
+  - Akzeptanzkriterium: "90% der Testpersonen aus der Zielgruppe finden einen bekannten Musiktitel innerhalb von 6 Sekunden und mit höchstens 3 Aktionen"
+- **Akzeptanzkriterien und nicht-funktionale Anforderungen sind nicht weit voneinander entfernt**
+
+- Die Begrüdung erklärt, warum eine Anforderung existiert.
+- Sie hilft dabei:
+  - die eigentliche Absicht zu verstehen
+  - passende Messgrößen zu finden
+  - versteckte Mehrfachanforderungen zu erkennen
+  - unnötige oder falsche Anforderungen zu hinterfragen
+- Woran würde der Fachbereich erkennen, dass diese Anforderung nicht erfüllt ist?
+
+- Gute Formulierungn enthalten mehr Details, z.B. sicher -> Passwort mit mindestens 12 Zeichen
+
+- **Akzeptanzkriterien können Ziel- oder Grenzwerte enthalten**
+- Nutzen:
+  - Zielwert beschreibt die erwrtet Qualität
+  - Grenzwert beschreibt die noch akzeptable Grenze
+  - Ausnahme und Toleranzen werden sichtbar
+  - wichtig für Tests und Überprüfbarkeit 
+
+- Bei **funktionalwn Anforderungen** zählt, ob das fachliche Ergebnis korrekt ist.
+- Beispiel: 
+  - Anforderung: "Das System speichert Messwerte von Wetterstationen"
+  - Akzeptanzkriterium: "Nach erfolgreiche Übertragung stimmen die im System gespeicherten Messwerte mit den von der Wetterstation gesendeten Messwerten überein."
+
+- **Qualitätsanforderungen** (nicht-funktional) müssen so konkretisiert werden, dass ihre Erfüllung nachweisbar geprüft werden kann.
+-  Beispiel:
+  - Anforderung: "Das System soll gut bedienbar sein."
+  - Akzeptanzkriterium: "Neue Benutzer können innerhalb von 30 Minuten einen Datensatz anlegen, ändern und löschen, ohne externe Hilfe zu verwenden."
+
+- **Randbedingungen** (nicht-funktional) schränken die Zulässige Lösung ein.
+- Beispiel:
+  - Randbedingung: "Der Softwareanteil des Sytems muss unter Linuxs laufen"
+  - Akzeotanzkriterium: "Alle freigegebenen Funktionen laufen korrekt unter der festgelegten Linux-Distribution und Version"
+
+- **Ein Akzeptanzkriterium ist noch kein Testfall.**
+  - beschreibt Bedingung für Akzeptanz
+  - fachliche formuliert
+  - relativ stabil
+  - Input für Tests
+- Testfall:
+  - beschreibt konkrete Prüfschritte
+  - operativ formuliert
+  - kann je Testumgebung variieren
+  - konkrete Durchführung der Prüfung
+- **Akzeptanzkriterien sagen, was gelten muss. Testfälle beschreiben, wie es geprüft wird.**
+
+- Wie Akzeptanzkriterien können formuliert werden? -> siehe Foliensatz Seite 19
+
+[!NOTE] Akzeptanzkriterien
+> konkretisieren fachliche Erwartungen
+> reduzieren Interpretationsspielräume
+> verbinden Anforderungen mit Tests
+> unterstützen Entwicklung, Review und Abnheme
+> Eine gute Anforderung sollte so formuliert sein, dass ihre Erfüllung nachvollziehbar geprüft werden kann.

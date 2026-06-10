@@ -72,6 +72,7 @@
     - erlaubt direkten Zugriff auf CPU, RAM, Betriebssystem
     - Von `C` über `C with classes` zu `C++` -> Ende 1998 erster `C++` Standard erschienen
     - ==Call by Value Sprache==
+    - ==Statische Datentypen==
     - **Grundprinzip**: Wiederkehrende Probleme durch Algorithmen in den Standard-Bibliotheken lösen
         --> Algorithmen sind losgelöst von den Datentypen
         --> `#include <algorithm>` wird benötigt
@@ -394,23 +395,24 @@ prozedur_3 () {
     ```
 
     - Verwendung des Dereferenzierungsoperators um mithilfe von Zeiger auf `int` auf den eigentlichen `int` zugreifen 
+
 **- Manuelle Freigabe von dynamischen Speicher:**
     - `delete` Operator ruft Destruktor der Instanz auf
     ``` C++
     Thing *pt = new Thing{};
     delete pt;
     ```
-    - wenn man die Variable nach einem `delte` nochmal nutzen will, gibt Laufzeitfehler -> **undefined behaviour**
+    - wenn man die Variable nach einem `delete` nochmal nutzen will, gibt Laufzeitfehler -> **undefined behaviour**
     - um Laufzeitfehler zu vermeiden setzt man die Variable nach einem `delete` auf `nullptr`
     - man muss sich merken dass man Array-New aufgerufen hat, um das mit `delete[]` freizugeben, gibt jedes Objekt im Array frei -> daher solche Arrays eher vermeiden
+
 - **Speicherlöcher:**
     - entstehen bei Heap-alloziertem Speicher, wenn dieser nie mit delete freigegeben wird und die Methode mit der lokalen Varible beendet ist
     - **use after free:** lokale Variable weg, aber Speicher noch da -> siehe obenstehendes Beispiel
     - können durch **Smart Pointer** vermieden werden
     - Warum ist eine manuelle Freigabe nötig?
         - `Thing *tp = new Thing{};` -> Raw Pointer, drücken keinen Besitz aus, aber nur Besitzer kann delete ausführen, Compiler kann nicht wissen dass Speicher gelöscht werden darf
-- **Smart Pointer:**
-    - Beim Verlassen des Gültigkeitsbereichs der Variable, wird Destruktor aufgerufen und lokale Varibale zerstört
+
 - **Destruktor:**
     - Wenn Konstruktor `C` heißt, dann heißt Destruktor `~C`
     - C++ garantiert, dass der Destruktor am Ende des Gültigkeitsbereichs aufgerufen wird, 
@@ -419,13 +421,219 @@ prozedur_3 () {
         - wenn das Programm sauber beendet wird
     - Da der Compiler bei Raw Pointern nicht erkennen kann, ob er diesen löschen darf, daher funktioniert das hier nicht 
     - primitive Datentypen haben keinen Destruktor
-- **Resource Acquisition is Initialization (RAII):**
+    - Im Destructor kann kein `delete` geschrieben werden, weil man gar nicht weiß, in welchem Speicher das Objekt liegt -> SmartPointer nutzen
+
+- **Garbage Collector**
+    - läuft, wann es passt -> Blackbox
+    - nicht deterministisch
+    - Problem bei zeitlich terministischen System (z.B. Herzschrittmacher) -> hier sind vor allem Programmiersprachen wie Java oder Go ausgeschlossen
+
+- **Smart Pointer & Resource Acquisition is Initialization (RAII):**
     - Smart Pointer = übernehmen Verantwortung für eine Ressource (z.B. Heap Speicher)
 
-### Polymorphismus
-- 
+    ``` C++
+    class smart_pointer {
+    public:
+        smart_pointer( Demo *p ) : verwaltetes_objekt{p} {}
+        ~smart_pointer() { delete verwaltetes_objekt; }
+        ~smart_pointer() = default; // Destruktor weiß nicht, ob das Objekt mit new initialisiert wurde, erstellt nicht automatisch delete
+    private:
+        Demo *verwaltetes_objekt;
+    }
+
+    int main() {
+        smart_pointer p { new Demo{} }
+    } 
+    // hier wird Destruktor aufgerufen
+    ```
+
+    - Beim Verlassen des Gültigkeitsbereichs der Variable, wird Destruktor aufgerufen und lokale Varibale zerstört
+    - ==valgrind== ersetzt new und delete durch eigene Implementierungen und kann Memory Leaks erkennen
+
+- **Exceptions**
+    - mit `throws` oder `try{} catch{}`
+    - es gibt kein `finally` (wird immer ausgeführt, um Ressourcen freizugeben), weil Ressourcen, wie lokale Variablen im Destruktor freigegeben werden
+ 
+### Vererbung
+- ==Laufzeit-Polymorphismus==
+    - erst zur Laufzeit wird erst entschieden, welche Methoden-Implementierung aufgerufen wird.
+    - beruht auf dem Mechanismus der sogenannten späten Bindung (*Late Binding*)
+- Java: `extends` - C++: `class Circle : public Shape`
+- Basisklassen können in einer separaten .hpp Datei gebaut werden und diese bei allen erbenden Klassen inkludiert werden.
+- polymorphe (überschreibare) Methoden müssen wir `virtual` am Anfang versehen werden
+    - Ist quasi ein optin Verfahren -> nur mit `virtual` wird dies genutzt -> bytelastiger, aber diesen "Preis" muss man bei bewusster Wahl zahlen
+    - sobald ein Methode `virtual` ist, muss der Destruktor auch `virtual` sein
+    - um dem Compiler zu überlassen, den Destruktor zu bauen, gibt man `virtual ~Shapes() = default;` an
+    - um zu signalisieren, dass die Methode einer Basisklasse überschrieben wird, schreibt man `override`, dann wäre `virtual` nicht mehr nötig:
+    ```C++
+    void draw() const override {...}
+    ```
+    - bei `Shape s = create_shape(shape_type);` gibt es immer ein Shape Objekt zurück
+    - Indirektion = Java nachbauen = wir brauchen eine Referenz
+        - `Shape &create_shape()`-> keine Referenzen auf lokale Variablen -> liegt auf Callstack, wird gelöscht nach Methodenaufruf
+        - `Circle globald_circle {...} Shape &create_shape()` -> globale Variable wäre in diesem Fall eine bessere Möglichkeit
+        - Auf dem Heap ist besser: 
+        ```C++
+        // POINTER:
+            // Basisklasse:
+            Shape *create_shape(char shape_type) {...}
+            
+            // main:
+            Shape *s = create_shape(shape_type); 
+            (*s).draw(); // Pfeile sind immer Pointer
+            // (*s)->draw(); // Pfeile sind immer Pointer
+            delete s; // manuelle Speicherverwaltung -> Passiert nie, wenn draw() eine Exception wirft?
+            virtual ~Shape() {delete this;} // Alternative zur manuellen Freigabe -> Destruktor wird nicht aufgerufen, weil es kein Objekttyp, sondern ein Pointer
+        
+        // UNIQUE POINTER:
+            // Basisklasse
+            // Verantwortung von unique_ptr (Wrapper) an Heap Speicher
+            unique_ptr<Shape> create_shape(char shape_type) {
+                unique_ptr<Shape> p = make_unique<Line>(...);
+                return p;
+            }
+
+            // main:
+            unique_ptr<Shape> s = create_shape(shape_type);
+            s->draw();
+        ```
+        - `move()` übergibt die Verantwortung von beispielsweise `unique_ptr<>` -> keine neue Pointer Adresse, diese wird mit übergeben
+    - um Methode abstrakt zu machen setzt man  `= 0` -> `virtual void draw() const = 0;`
+    - Vermeidung, dass Konstruktor oder Destruktor keine Exception wirft -> manchmal braucht man diese Garantie:
+    ```C++
+    Shape() noexcept = default;
+    ```
+
+#### unique_ptr implementieren
+```C++
+#include <iostream>
+#include <string_view>
+#include <string>
+#include <print>
+
+class Ressource {
+public:
+    explicit Ressource(std::string_view name) : _name{name} {
+        std::println("Konstruktor von {}", _name);
+    }
+
+    ~Ressource() {
+        std::println("Destruktor von {} \n\n", _name);
+    }
+
+    void doit() { 
+        std::println("Do it!");
+    }
+
+private:
+    const std::string _name;
+};
+
+class MyUniquePointer {
+public:
+    // Konstruktor
+    MyUniquePointer(Ressource *r) : ressource_{ r } {
+        std::println("MyUniquePointer ressource_={}", static_cast<void*>(ressource_));
+    }
+
+    // Kopierkonstruktor
+    MyUniquePointer(MyUniquePointer const& orig) = delete;
+
+    // Verschiebekonstruktor
+    MyUniquePointer(MyUniquePointer && orig) : ressource_{orig.ressource_} {
+        orig.ressource_ = nullptr;
+    }
+
+    // Destruktor
+    // ~MyUniquePointer() = default; // default nicht sinnvoll
+    ~MyUniquePointer() { 
+        std::println("~MyUniquePointer ressource_={}", static_cast<void*>(ressource_));
+        delete ressource_;
+    }
+
+    // Zugriff auf verwaltete Ressource
+    Ressource& get() { return *ressource_; }
+    Ressource& operator*() { return *ressource_; }
+    Ressource* operator->() { return ressource_; }
+
+private:
+    Ressource* ressource_;
+};
+
+MyUniquePointer erzeuge_ressource() {
+    MyUniquePointer p { new Ressource {"r4"} };
+    return p;
+}
+
+int main() {
+    // auto *r = new Ressource("r1");
+    // delete r;
+
+    // std::unique_ptr<Ressource> r = std::make_unique<Ressource>("r2");
+    // throw 42;
+    
+    MyUniquePointer p { new Ressource{"r3"} }; // ruft erst Konstruktor, dann Destruktor auf
+    
+    p.get().doit();
+    (*p).doit();
+    p->doit();
+
+    MyUniquePointer p2 = erzeuge_ressource(); // Kopie entsteht
+}
+```
+
+##### Kopieren verhindern
+``` C++
+int main() {
+    MyUniquePointer p { new Ressource{"r3"} }; // ruft erst Konstruktor, dann Destruktor auf
+    
+    {
+        MyUniquePointer p2 {p} // Kopie
+        p2->doit();
+    }
+
+    p->doit(); // Ressource nicht mehr vorhanden
+}
+```
+
+``` C++
+int main() {
+    MyUniquePointer p1 { new Ressource{"r3"} };
+    p1->doit();
+
+    MyUniquePointer p2 { new Ressource{"r3"} };
+    p2->doit();
+
+    p2 = p1 // Kopie
+}
+```
+
+- Kopierkontruktion mit `Demo d2 {d1}` -> Referenz auf konstantes Original -> nicht erlaubt
+- Kopierzuweisung mit `=` nicht erlaubt
+- Unique Pointer sollte nicht kopiert werden, sollte nicht funktionieren
+- Beim Kopieren schau Compiler auf Datensicht --> lokale Variable = Zeiger = Zahl -> Wie kopiert man eine Zahl? Bitweise Kopie / Duplizierung
+- Kopieren verbieten mit Zugriffmodifikatoren wie `private`
+
+##### Verschieben
+- Move-Konstruktor -> nimmt Doppelreferenz `&&` -> Inhalt des Originalobjekts wird geleert und dessen Ressource wird in neues Objekt übernommen
+    - Destruktor des Originalobjektes wird gecallt -> `delete` auf `nullptr` ist erlaubt
+    - `std::move()` -> erzeugt Referenz aus A-Value -> `&&`
+    
+    ``` C++
+    MyUniquePointer p2 { std::move(p1) };
+    ```
+
+    - `std::exchange(other.ressource_, nullptr)` tauscht Werte aus -> braucht Referenz auf einen Wert und einen konstanten Wert -> besser weil nur 1 Schitt -> weniger fehleranfällig
+- Move-Zuweisungsoperator
+    `p3 = std::move(p2)`
 
 ## Templates
+> Templates sind ein Compilezeit-Mechanismus, sie generalisieren den Typ
+
+- **Klassen-Templates**
+    - Typ-Parameter `template<typename T>` um Klasse zu einem Template umzubauen
+    - zur Laufzeit ist das eine normale Klasse da T durch die tatsächliche Ressource ersetzt wird: `MyUniquePointer<int> p { new int { 42 } }`
+
 
 ---
 
@@ -603,5 +811,3 @@ void main() {
         - Methode execute() je nach Eingabe
         - initialisiere DataBase API, um Daten mit CRUD Methoden zu verarbeiten
     - class Database API -> CRUD Methoden
-
-!!! switch -> siehe shapes 4 a

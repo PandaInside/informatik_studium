@@ -58,5 +58,15 @@
 
 ---
 
-## Website
-- 3 Dos and Don'ts for Portfolio Website
+## Prüfung
+
+last thursday june - 17 uhr start -> für beide einschreiben
+1. listening + questions
+2. choose topic + essay 150-300 wörter
+3. questions to presentations
+
+- computer -> exam per mail -> word dokument einreichen
+- dictionary, oxford or pons etc.
+
+- portfolio macht 1/2 vom writen part aus
+- keine präsentation des portfolios
