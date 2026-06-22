@@ -56,6 +56,22 @@
   - The algorithm doesn't care what you like...it cares what you don't stop watching.
   - My YouTube homepage knows me better than my friends do
 
+## Sonstiges Lernmaterial
+- https://flensburgerfiles.wordpress.com/2019/08/15/the-creative-creator-creatively-creates-a-creation-a-look-at-derivations-in-english/ 
+
+Task 3: Now for an even bigger challenge- Using the root word in parenthesis, complete the sentence using either the verb, adjective or noun form.  The topic is how to prepare for a test in class.
+
+1. **Preparation** is the key when you have a big test coming up. (prepare)
+2. It is important to **take** notes and pay **attention** to the teacher in class. (take/ attend).
+3. Sometimes it helps to have a **structured** outline so that better understand the **complexity** of the topic. (structure/ complex)
+4. Sometimes, attending a **tutorial** will help you with questions that are hard but **doable** to answer (tutor/do)
+5. But you must be **communicative** and clear in addressing these **complicated** questions. (communicate/complicate)
+6. It is sometimes **useful** and **helpful** to start studying two months before the test. (use/ help).
+7. Having **reliable** partners in a study group will make studying for a test even more fun. (rely)
+8. Having good study habits, such as good **organisational** skills, thorough notes and some nmemonics will help in your **development** as a person later on. (organize/develop).
+9. The night before the test, it is **adviced/adviceable** not to drink caffeine nor alcohol and to get a **manageable** amount of sleep. (advise/ manage).
+10. On the day of the test, be **confident** and think positive. After the test, you can **party**! (confide/party).
+
 ---
 
 ## Prüfung

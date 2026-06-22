@@ -59,6 +59,9 @@
 > Eine **Qualitätsanforderung** ist eine Anforderung, die sich auf ein Qualitätsmerkmal bezieht, das nicht durch funktionale Anforderungen abgedeckt wird. Sie legen die gewünschte Qualität fest und beeinflussen stark die Systemarchitektur. Normen (wie ISO) beschreiben, was Qualitätsmerkmale sind. 
 > Eine **Randbedingung** ist eine Anforderung, die den Lösungsraum jenseits dessen einschränkt, was notwendig ist, um die funktionalen Anforderungen und die Qualitätsanforderungen zu erfüllen. Sie werden nicht umgesetzt und können nicht beeinflusst werden. Sie setzen die Umsetzungsmöglichkeiten ein. Sie können sich auf das betrachtete Sytem und/oder den Entwicklungsprozess beziehen.
 
+## Foliensatz reqeng-nfas-addon
+- ...
+
 ## Foliensatz reqeng-le-2
 ### Systemkontext
 

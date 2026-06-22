@@ -634,7 +634,150 @@ int main() {
     - Typ-Parameter `template<typename T>` um Klasse zu einem Template umzubauen
     - zur Laufzeit ist das eine normale Klasse da T durch die tatsächliche Ressource ersetzt wird: `MyUniquePointer<int> p { new int { 42 } }`
 
+## Vektor für Datentyp `double`
+> siehe Repo "myvector"
+- `std::size_t` (64 Bit Wert) -> Verallgemeinerung für `int`
+- Verwaltungdaten liegen im Stack
+- eigentliche Daten liegen im Heap
+- `begin` und `end` für die Iteration in (Such- , Sortier-, ...) -Algorithmen
+    - `*iterator = find(vector.begin(), vector.end(), 42);`
+    - `if(iterator != end) { /*gefunden*/}`
+    - `begin` zeigt auf die Adresse des ersten Elements des Containers
+    - `end` zeigt auf das Element nach dem letzten Element
+    - Wie berechne ich `end`?
+        - Compiler: `m_elems + ( m_size * sizeof( double ) )` -> ==Zeigerarithmetik==
+    - `cbegin () const` und `cend () const`
+- fehlender Destruktor führt zu einem Speicherloch, da die lokale Variable auf dem Stack zwar entfernt wird, aber die Daten auf dem Heap nicht
+    - Da Array New (`m_elems = new double[size]`) verwendet wurde, muss der Destruktur Array Delete vornehmen (`~MyVector() {delete[] m_elems}`)
+- Wenn v2 Kopie von v1 ist (`v2 = MyVector() {v1}`),  liegen zwei lokale Variablen vor, welche beide auf die gleichen Adressen auf dem Heap Speicher zeigen
+    - Kopierkonstruktur und Zuweisungsoperator legen die Elemente neu im Heap an (Kopieren, Elemente löschen, size holen, Elemente anlegen)
+    - Bestenfalls immer Standardbibliotheken nutzen -> Kopieren:
+        - `std::copy(other.begin(), other.end(), begin());` -> fehleranfälliger bei Verschreiben
+        - `std::ranges::copy(other, begin());` -> einfacher, empfohlen
+    - Pointer: Kopieren muss selbst übernommen werden, Compiler würden falsch kopieren
+    - ==Rule of 3==: Wenn man das Zerstören bedenken muss, muss man auch an das Kopieren denken (Destruktor? Dann auch Kopierkonstruktur und Zuweisungsoperator bauen)
+- Verschiebekonstruktur
+    - Wenn neues Element entsteht, klaue dem alten Element seine Heap-Daten
+    - `sink(MyVector)` -> Hier funktioniert Copy-Allition nicht
+    - `MyVector(MyVector &&other) noexcept : m_size{other.size}, m_elems{other.m_elems} {other.m_elems=nullptr; other.size=0;}`
+        - A-Value Referenz wird erstellt
+        - mit `std::move()` -> erzwingen einer Move Semantic -> Heap Speicher klauen
+- Verschiebezuweisung
+    - Elemente löschen, Elemente zuweisen (`other.m_elems = m_elems;`), 
+    - Left Hand Size und Right Hand Size
+- ==Rule of 5==: mind. Destruktor, zusätzlich Kopierkonstruktur und -zuweisung, optional Verschiebekonstruktor und -zuweisung
+- dynamische Liste:
+    - `std::size_t capacity` -> bau mir einen MyVector mit n vorgesehenen Elementen
+    - `std::size_t size` -> tatsächlich enthaltene Elementen
+    - `push_back()` -> fügt eine Element an die Liste an -> 
+        - capacity wird um 1 erhöht, wenn size == capacity
+        - wird capacity wirklich benötigt? Multidimensionales Problem, nicht so einfach erklärbar
+        - besser wäre es, capacity um das Doppelte zu erhöhen, um gleich mehr Speicher zu allozieren -> Allozieren ist teuer
+    - `new` legt immer neuen Speicherbereich an
+        - `malloc`: "Memory Allocation" (wie bei `new`), funktioniert mit Bytes
+            - Das C Pandant zu `new`
 
+            ```C++
+            ptr = malloc(1000 * sizeof(double))
+            n.malloc(2000 * sizeof(double))
+            ```
+
+        - `realloc`: Vorteil, dass es **evtl.** Speicherbereich erweitern kann -> Wenn nicht gibt es einen Pointer auf den neuen Speicherbereich zurück
+
+        ```C
+        n.realloc(ptr, 2000 * sizeof(double))
+        ```
+
+        - `free`: Das C Pandant zu `delete`
+
+## Dynamische Liste Teil 1
+### Klassentemplate für Vektor
+- Template Variable wird durch Datentyp ersetzt
+- `new` holt für Klassendatentypen Speicher auf dem Heap und ruft Default Kontruktoren auf
+- für primitive Datentypen wird der Container befüllt mit `std::ranges::fill(*this, T{});` -> Code existiert nicht, wenn es keine arithmetischer Typ ist
+    - siehe Partielle Template Spezialisierung für primitive Datentypen
+- `static_assert(std::is_arithmetic_v<T> || std::is_default_constructible_v<T>, MyVector<T> ...)`
+- Typeparamter vom Template einschränken: template<IsPrimitiveOrDefaultConstructibleType>
+- `template<typename T> requires std::is_arithmetic_v<T> || std::is_default_constructible_v<T>`
+- Basis-New (Raw-Memory) legt Heap-Speicher an ohne Konstruktor zu callen
+    - `... (::operator new(m_capacity * sizeof(T)) :: nullptr)`
+- Placement-New (`new (m_elems + m_size) T(value)`) ruft Konstruktor von T auf
+    - neues T mit dem value Konstruktur an der Stelle der übergebenen Werte (elems + size -> also das letzte Element)
+- Destruktor komplizierter:
+    - `::operator new` holt uninitialisierten Speicher -> Bytebasiertes delete (`::operator delete(m_elems)`), weil es nicht weiß, was in den Bytes gespeichert ist -> für jedes Element muss der Destruktor aufgerufen werden
+- `begin` und `end` -> für range-base-source, um Algorithmen der Standardbibliothek zu nutzen, 
+- Wenn man Heap mit new Array alloziiert, immer zusammenhänger Speicher, nie gestückelt
+- aktuelle PCs
+    - new -> auf virtuellem Speicher -> existiert nirgends
+    - Mapping von virtuell auf physisch -> mehrere physische RAM Seiten -> Stückelung möglich -> aus Sicht des RAM trotzdem zusammenhängender Speicher
+- Kopieren dringend notwendig
+- Verschieben ist eine Optimierung
+    - Zuweisung: Werte von other den Original-Membern zuweisen und die other-Member löschen bzw. auf nullptr setzen
+
+- aktuell (myVector_5) muss Größe zu Anfang bekannt sein -> dynamische Liste benötigt
+    - `push_back()` -> Speicher wird im 1 erhöht und neu angelegt -> vorheriger Speicher wird frei gemacht -> Performance? Laufzeitkomplexität O(n)
+        - bei wiederholtem Aufruf -> Laufzeitkomplexität von O(n*n)
+        - Lösung: mehr Speicher reservieren statt immer um 1 zu erhöhen
+        - Einführung von `capacity()` -> Wenn `m_size == m_capacity` wird neuer Speicher alloziert
+    - `new` alloziert immer neuen Speicher und erweiter den bestehenden nicht
+        - Meta-Datenblock wird vor den eigentlichen Elementen gespeichert, er enthält die Info für wie viele Ints Speicher belegt / reserviert wird
+        - Im Anschluss wird der Speicher für `new []` angelegt
+        - Heap wächst von links nach rechts -> Lücken werden zuerst wieder gefüllt, insoweit das zu speichernde Element reinpasst
+        - wird durch `delete` ein Speicher frei gemacht -> Zerpflückung -> Lücke im Speicher -> kein Aufschluß möglich -> Referenzen würden sonst nicht mehr stimmen
+    - `new` (C++) & `malloc` (C)
+    - `delete` (C++) & `free` (C)
+    - `realloc` (C)
+
+## Dynamische Liste Teil 2
+- Klassentemplate für Vektor
+- Klassentyp -> Speicher, wo schon initialisierte T Elemente drin liegen
+- primitiven Datentypen -> `new` ruft nicht auftomatisch eine Allozierung auf -> manuelle Initialisierung (Schritte 6 a & b - ***ignorieren***)
+- Wenn man hinter `new [] {}` dann wird automatisch initialisiert -> ***das muss man hauptsächlich wissen***
+- `new` ruft immer Default-Initialisierung auf -> Was wenn kein Default Konstruktor existiert? RAII -> Initiale Wertzuweisung im Konstruktor und nicht über `init()` Methoden
+    - `new` verwenden, was nur den erste Schritt (Heap allozieren - Raw Memory - hier liegen nur Byte) ausführt, aber keinen Konstruktoraufruf
+    - `operator::new` & `operator::delete` -> einzige Stelle wo man Destruktor manuell aufruft
+    - `push_back` -> Kopie anlegen -> `new(m_elems + m_size) T(value)` -> Kopier-Konstruktor von value -> Positionierung des Elements T an der Stelle `m_elems + m_size` -> ==Placement new==
+        - `this` von neu konstruierten T zeigt auf angegebene Adresse
+        - Speicherbereich sollte noch nicht vergeben sein -> Problem
+        - Alternative `std::construct_at(location, args)` und `std::destroy_at(location + iterator)`
+- `std::copy_constructible` -> Datentyp T muss kopierkonstruierbar sein
+    - Optimierung durch Verschiebesemantik: `void push_back()`
+    - `emplace_back()` -> Werte mit `std::forward<Args>(args)` an Konstruktor zu übergeben -> ==perfect forwarding==
+        - hier wird T erst gebaut
+- Kompilezeit Switch mit `constexpr` -> je nach zutreffender Bedingung wird der jeweilige Code ausgeführt
+- `std::is_trivially_copyable`
+
+## Shared Pointer
+- Smart Pointer mit unique counter
+- unique pointer räumt Heap und Stack automatisch auf -> kann nur einen geben der auf den Heap Speicher zeigt -> merken, wer was besitzt
+- hier kommt Shared Pointer ins Spiel -> mehrere Shared Pointer verwalten den gleichen Heap Speicher
+    - game level im heap und Speicher des Levels soll irgendwann aufgeräumt werden
+    - mehrere Threats greifen darauf zu -> Welcher Threat wird dem unique Pointer zugewiesen?
+    - Shared Pointer verwaltet ein Stück Heap -> Kopien von Shared Pointer -> zählt mit: ==Reference Counting==
+    - Wenn Reference Count auf 0, räumt der letzte auf und macht das Licht aus
+- Shared Pointer:
+    - T zeigt auf Heap Speicher
+    - braucht Datenstruktur `strcut ControlBlock() {}` bestehend aus:
+        - Pointer auf Heap Speicher
+        - ref_count zeigt auf Anzahl der SharedPointer und zählt diese hoch
+    - pro Heap Speicher ein Pointer auf ControlBlock control
+    ```C++
+    explicit SharedPtr (T *ptr) : control(new ControlBlock(ptr)) {}
+    ```
+    - `release()` und `std::exchange()` für Verschiebezuweisung
+    - `std::exchange()` für Verschiebe-Konstruktor
+    - `release()` für Kopierzuweisung
+        - Heap aufräumen, control aufräumen
+        - danach wird neue control zugewiesen und Referent Counter wird hochgezählt
+    - `move()` im Konstruktor bei neuer Instanz -> "Nimm den Verschiebekonstruktor"
+        - klauen control Verantwortung von s1 und verschieben control zu s3
+        - s1 existiert und funktioniert als Objekt weiterhin, aber control zeigt auf `nullptr`
+    - beliebig viele SharedPointer -> Garbage Collection for free
+    - Swift: Nutzt Reference Counting bei Allokation von Heap Speicher
+    - 
+
+
+---
 ---
 
 ## PV1 Konzept (Prozedual)
