@@ -910,6 +910,12 @@ Beispiel:
 
 ![img](../assets/UseCaseDiagramm2.png)
 
+#### Echte Use Cases nach Ivar Jacobson
+> - Wird von einem Akteur ausgelöst (initiiert von außerhalb des Systems)
+> - Liefert Akteur einen erkennbaren, eigenständigen Nutzer / Wert (nicht nur technischer Zwischenschritt)
+> - Beschreibt vollständige Interaktion - von Anfang bis zum abgeschlossenen Ergebnis (nicht nur einzelner Klick / Funktion)
+> - Ist aus Sicht des Akteurs formuliert, nicht aus technischer Systemsicht
+
 #### Notationen
 **Assoziation**
 
