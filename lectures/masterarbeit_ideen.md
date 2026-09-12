@@ -7,3 +7,5 @@
 - Kaufabwicklung und Tracking im KI Modell
 - Keine direkten Besuche mehr
 - Google Global Cart
+
+# GeoLocation Calendar
